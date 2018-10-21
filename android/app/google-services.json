@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "603223587127",
+    "firebase_url": "https://so-vai-5d665.firebaseio.com",
+    "project_id": "so-vai-5d665",
+    "storage_bucket": "so-vai-5d665.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:603223587127:android:1e5e9e9c0bf8c030",
+        "android_client_info": {
+          "package_name": "com.claudio.sovai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "603223587127-pigb8jofufae5fhqsp24ug51rrhe94so.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7SN0ekz6v3FkMv1DzkXaKmdzfya12vSs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
