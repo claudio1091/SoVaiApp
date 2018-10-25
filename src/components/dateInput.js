@@ -4,7 +4,7 @@ import Moment from 'moment';
 
 function DateInput({
   defaultDate = new Date(),
-  defaultFormat = 'DD/MM/YY',
+  defaultFormat = 'DD/MM/YYYY',
   onChange
 }) {
   openDatePicker = async () => {

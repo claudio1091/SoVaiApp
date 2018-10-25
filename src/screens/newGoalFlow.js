@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, AsyncStorage, FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { ListView, Tile, Title, Subtitle, Divider, Spinner } from '@shoutem/ui';
+import Moment from 'moment';
 
 import Container from '../components/container';
 import Button from '../components/Button';
@@ -16,30 +16,16 @@ class NewGoalFlow extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      goal: {},
+      goal: new Goal({status: 'open'}),
       step: 0
     };
   }
 
   async componentDidMount() {
     const { navigation } = this.props;
-    const goal = navigation.getParam('goal');
     const flowStep = navigation.getParam('step', 0);
 
-    console.log({ goal });
-
-    if (goal) {
-      // exists goal on parameter
-      let user = await AsyncStorage.getItem('user');
-      user = JSON.parse(user);
-      this.setState({ goal, step: flowStep });
-    } else {
-      // create a new goal
-      this.setState({
-        goal: new Goal(user.uid, '', new Date(), 'open').repeatInDays(),
-        step: flowStep
-      });
-    }
+    this.setState({ step: flowStep });
   }
 
   newGoal = async () => {
@@ -54,6 +40,8 @@ class NewGoalFlow extends Component {
 
   onSuccess(user) {
     console.log(user);
+    this.props.navigation.navigate('ListScrn');
+    return;
   }
 
   onError(error) {
@@ -62,9 +50,17 @@ class NewGoalFlow extends Component {
 
   nextStep = async nextStep => {
     if (nextStep >= 3) {
-      console.log('time to create a Goal');
-      console.log(this.state);
-      return;
+      let user = await AsyncStorage.getItem('user');
+      user = JSON.parse(user);
+      const goal = Object.assign({}, this.state.goal, {userId: user.uid})
+
+      this.setState({goal}, () => {
+        this.props.createGoal(this.state.goal, this.onSuccess, this.onError);
+        console.log('time to create a Goal');
+      });
+
+      // save the goal
+      
     }
 
     this.props.navigation.navigate('NewGoalFlow', {
@@ -91,6 +87,8 @@ class NewGoalFlow extends Component {
     const { navigation } = this.props;
     const flowStep = navigation.getParam('step', 0);
     const { goal } = this.state;
+
+    console.log('goal -> ', goal)
 
     return (
       <Container>
@@ -132,16 +130,18 @@ class NewGoalFlow extends Component {
 
           {flowStep === 2 && (
             <View>
-              <Text style={{ color: 'white', fontSize: 40 }}>Me AJUDE</Text>
-              <Text style={{ color: 'white', fontSize: 40 }}>
-                A ATINGIR MINHA
+              <Text style={{ color: 'white', fontSize: 40 }}>TE MOTIVAREMOS DIARIAMENTE</Text>
+              <Text style={{ color: 'white', fontSize: 40, marginLeft: 20 }}>
+                A ATINGIR SUA
               </Text>
-              <Text style={{ color: 'white', fontSize: 40 }}>META</Text>
-              <InputText
-                style={{ marginLeft: 25 }}
-                placeholder="Correr 5 Km..."
-                onChange={value => this.updateGoalName(value)}
-              />
+              <Text style={{ color: 'white', fontSize: 40 }}>META DE</Text>
+              <Text style={{ color: '#232855', fontSize: 40, marginLeft: 10 }}>
+                {goal.name ? goal.name.toUpperCase() : ''}
+              </Text>
+              <Text style={{ color: 'white', fontSize: 40 }}>ATÉ</Text>
+              <Text style={{ color: '#232855', fontSize: 40, marginLeft: 10 }}>
+                {goal.dtGoal ? Moment(goal.dtGoal).format('DD/MM/YYYY') : ''}
+              </Text>
             </View>
           )}
         </View>
