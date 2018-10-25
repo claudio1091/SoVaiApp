@@ -36,7 +36,6 @@ export function login(data, callback) {
 
 //Get the user object from the realtime firebase.database()
 export function getUser(user, callback) {
-  console.log('getUser -> ', user);
   firebase
     .database()
     .ref('users')

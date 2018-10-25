@@ -71,19 +71,6 @@ class SingIn extends Component {
       </Container>
     );
   }
-
-  renderItem({ item, index }) {
-    return (
-      <View style={styles.row}>
-        <Text style={styles.title}>
-          {parseInt(index) + 1}
-          {'. '}
-          {item.title}
-        </Text>
-        <Text style={styles.description}>{item.description}</Text>
-      </View>
-    );
-  }
 }
 
 //Connect everything
@@ -91,28 +78,3 @@ export default connect(
   null,
   { login }
 )(SingIn);
-
-const styles = StyleSheet.create({
-  activityIndicatorContainer: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1
-  },
-
-  row: {
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    padding: 10
-  },
-
-  title: {
-    fontSize: 15,
-    fontWeight: '600'
-  },
-
-  description: {
-    marginTop: 5,
-    fontSize: 14
-  }
-});

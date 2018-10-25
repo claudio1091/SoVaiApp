@@ -4,10 +4,12 @@ import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 import SingIn from './screens/singIn';
 import SingUp from './screens/singUp';
 import ListGoals from './screens/listGoals';
+import NewGoalFlow from './screens/newGoalFlow';
 
 const RootStack = createStackNavigator(
   {
-    ListScrn: ListGoals
+    ListScrn: ListGoals,
+    NewGoalFlow
   },
   {
     initialRouteName: 'ListScrn',

@@ -3,7 +3,8 @@ import * as actionTypes from '../actions/actionTypes'; //Import the actions type
 
 let initialState = {
   isLoading: false,
-  goals: []
+  goals: [],
+  newGoal: {}
 };
 
 const goalReducer = (state = initialState, action) => {
@@ -18,7 +19,6 @@ const goalReducer = (state = initialState, action) => {
     case actionTypes.GOALS_AVAILABLE: {
       let { data } = action;
       let goals = [];
-      console.log({ data });
 
       //convert the snapshot (json object) to array
       data.forEach(function(childSnapshot) {

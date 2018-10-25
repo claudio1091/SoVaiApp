@@ -19,7 +19,13 @@ class ListGoals extends Component {
     this.props.getGoals(user.uid, this.onError);
   }
 
-  newGoal = async () => {
+  newGoal = () => {
+    this.props.navigation.navigate('NewGoalFlow', {
+      step: 0
+    });
+
+    return;
+    /*
     let user = await AsyncStorage.getItem('user');
     user = JSON.parse(user);
     let goal = new Goal(user.uid, 'New New', new Date());
@@ -27,6 +33,7 @@ class ListGoals extends Component {
     goal.archive();
 
     this.props.createGoal(goal, this.onSuccess, this.onError);
+    */
   };
 
   onSuccess(user) {
@@ -42,6 +49,7 @@ class ListGoals extends Component {
   render() {
     return (
       <Container>
+        <Button primary text="Novo" onPress={() => this.newGoal()} />
         <FlatList
           style={{ flex: 1 }}
           data={this.props.goals}

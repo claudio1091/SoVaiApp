@@ -11,11 +11,9 @@ export function createGoal(goal, successCallback, errorCallback) {
 }
 
 export function getGoals(userId, errorCB) {
-  console.log({ userId });
   return dispatch => {
     dispatch({ type: actionTypes.GOALS_LOADING });
     goalHelper.getGoals(userId, function(success, data, error) {
-      console.log({ success, data, error });
       if (success) dispatch({ type: actionTypes.GOALS_AVAILABLE, data });
       else if (error) errorCB(error);
     });
