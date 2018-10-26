@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Button component Render as expected 1`] = `
+<Styled(TouchableHighlight)
+  activeOpacity={0.3}
+  delayLongPress={3800}
+  onLongPress={[Function]}
+  onPress={[Function]}
+  underlayColor="#ffffff"
+>
+  <Styled(Component)>
+    <Styled(Component)>
+      Test
+    </Styled(Component)>
+  </Styled(Component)>
+</Styled(TouchableHighlight)>
+`;
