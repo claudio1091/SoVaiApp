@@ -7,7 +7,7 @@ import { color } from '../../styles/theme';
 
 const Content = styled.KeyboardAvoidingView`
   flex: 1;
-  flex-direction: 'column';
+  flex-direction: column;
 `;
 
 function Container({ children }) {
@@ -27,7 +27,7 @@ function Container({ children }) {
 }
 
 Container.propTypes = {
-  children: PropTypes.element,
+  children: PropTypes.array,
 };
 
 export default Container;

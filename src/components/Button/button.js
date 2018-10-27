@@ -13,22 +13,22 @@ const TouchableContainer = styled.TouchableHighlight`
 `;
 
 const ButtonContainer = styled.View`
-  align-items: 'center';
+  align-items: center;
   background-color: ${props => (props.primary ? '#EE6C4D' : 'transparent')};
-  border-color: '#EE6C4D';
+  border-color: #ee6c4d;
   border-radius: 10;
   border-width: ${props => (props.primary ? 0 : 3)};
-  flex-direction: 'column';
+  flex-direction: column;
   height: ${buttonHeight};
-  justify-content: 'center';
+  justify-content: center;
   width: ${buttonWidth};
 `;
 
 const ButtonText = styled.Text`
-  color: '#FFF';
+  color: #fff;
   font-family: 'roboto-light';
   font-size: 16;
-  font-weight: '300';
+  font-weight: 300;
 `;
 
 const Button = ({ text, onPress }) => {
