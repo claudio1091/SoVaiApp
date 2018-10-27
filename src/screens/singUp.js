@@ -1,24 +1,31 @@
-'use strict';
-
 import React, { Component } from 'react';
-import { View, Image } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import styled from 'styled-components/native';
 
-import Container from '../components/container';
-import InputText from '../components/inputText';
+import Container from '../components/Container';
+import InputText from '../components/InputText';
 import Button from '../components/Button';
 import { register } from '../actions/authActions';
+
+const Logo = styled.Image`
+  height: 150;
+  margin-vertical: 30;
+  width: 150;
+`;
+
+const ButtonsContainer = styled.View`
+  flex-direction: 'row';
+  justify-content: 'space-between';
+  width: 305;
+`;
 
 class SingUp extends Component {
   state = {
     username: null,
     email: null,
-    password: null
-  };
-
-  singUp = () => {
-    console.log(this.state);
-    this.props.register(this.state, this.onSuccess, this.onError);
+    password: null,
   };
 
   onSuccess(user) {
@@ -29,49 +36,39 @@ class SingUp extends Component {
     console.log(error);
   }
 
+  singUp = () => {
+    const { register } = this.props;
+    register(this.state, this.onSuccess, this.onError);
+  };
+
   render() {
+    const { navigation } = this.props;
+
     return (
       <Container>
-        <Image
-          style={{ width: 150, height: 150, marginVertical: 30 }}
-          source={require('../assets/icon.png')}
-        />
+        <Logo source={require('../assets/icon.png')} />
         <View>
-          <InputText
-            placeholder="Nome de Usuário"
-            onChange={value => this.setState({ username: value })}
-          />
-          <InputText
-            placeholder="Email"
-            onChange={value => this.setState({ email: value })}
-          />
-          <InputText
-            isSecure
-            placeholder="Senha"
-            onChange={value => this.setState({ password: value })}
-          />
+          <InputText placeholder="Nome de Usuário" onChange={value => this.setState({ username: value })} />
+          <InputText placeholder="Email" onChange={value => this.setState({ email: value })} />
+          <InputText isSecure placeholder="Senha" onChange={value => this.setState({ password: value })} />
 
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: 305
-            }}
-          >
-            <Button
-              text="ENTRAR"
-              onPress={() => this.props.navigation.navigate('SingIn')}
-            />
+          <ButtonsContainer>
+            <Button text="ENTRAR" onPress={() => navigation.navigate('SingIn')} />
             <Button primary text="CADASTRAR" onPress={() => this.singUp()} />
-          </View>
+          </ButtonsContainer>
         </View>
       </Container>
     );
   }
 }
 
-//Connect everything
+SingUp.propTypes = {
+  register: PropTypes.object.isRequired,
+  navigation: PropTypes.object.isRequired,
+};
+
+// Connect everything
 export default connect(
   null,
-  { register }
+  { register },
 )(SingUp);

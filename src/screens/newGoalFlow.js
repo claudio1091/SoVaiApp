@@ -1,83 +1,90 @@
-'use strict';
-
 import React, { Component } from 'react';
-import { StyleSheet, View, AsyncStorage, FlatList, Text } from 'react-native';
+import { View, AsyncStorage, Text } from 'react-native';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import styled from 'styled-components/native';
 import Moment from 'moment';
 
-import Container from '../components/container';
+import Container from '../components/Container';
 import Button from '../components/Button';
-import InputText from '../components/inputText';
-import DateInput from '../components/dateInput';
+import InputText from '../components/InputText';
+import InputDate from '../components/InputDate';
+
 import { createGoal } from '../actions/goalActions';
 import Goal from '../model/goalModel';
+
+const NormalText = styled.Text`
+  color: white;
+  font-size: 40;
+  font-weight: 300;
+`;
+
+const HighlightText = styled(NormalText)`
+  color: #232855;
+`;
+
+const placeholdersExamples = ['Correr 5km', 'Perder 5kg', 'Ir á academia todos os dias', 'Economizar 5 Reais'];
 
 class NewGoalFlow extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      goal: new Goal({status: 'open'}),
-      step: 0
+      goal: new Goal({ status: 'open' }),
     };
   }
 
-  async componentDidMount() {
-    const { navigation } = this.props;
-    const flowStep = navigation.getParam('step', 0);
-
-    this.setState({ step: flowStep });
-  }
-
-  newGoal = async () => {
-    let user = await AsyncStorage.getItem('user');
-    user = JSON.parse(user);
-    let goal = new Goal(user.uid, 'New New', new Date());
-    goal.repeatInDays();
-    goal.archive();
-
-    this.props.createGoal(goal, this.onSuccess, this.onError);
-  };
-
   onSuccess(user) {
-    console.log(user);
-    this.props.navigation.navigate('ListScrn');
-    return;
+    const { navigation } = this.props;
+    navigation.navigate('ListScrn');
   }
 
   onError(error) {
     console.log(error);
   }
 
+  persistGoal = async () => {
+    const { createGoal } = this.props;
+    const { goal } = this.state;
+    let user = await AsyncStorage.getItem('user');
+
+    const goalSave = new Goal().inflate(goal);
+
+    user = JSON.parse(user);
+    goalSave.userId = user.uid;
+    goalSave.repeatInDays();
+
+    console.log('saving this goal -> ', goalSave);
+    // createGoal(goal, this.onSuccess, this.onError);
+  };
+
   nextStep = async nextStep => {
+    const { goal } = this.state;
+    const { navigation } = this.props;
+
     if (nextStep >= 3) {
-      let user = await AsyncStorage.getItem('user');
-      user = JSON.parse(user);
-      const goal = Object.assign({}, this.state.goal, {userId: user.uid})
-
-      this.setState({goal}, () => {
-        this.props.createGoal(this.state.goal, this.onSuccess, this.onError);
-        console.log('time to create a Goal');
-      });
-
       // save the goal
-      
+      return this.persistGoal();
     }
 
-    this.props.navigation.navigate('NewGoalFlow', {
+    return navigation.navigate('NewGoalFlow', {
       step: nextStep,
-      goal: this.state.goal
+      goal,
     });
   };
 
   updateGoalName = name => {
-    const tempGoal = Object.assign({}, this.state.goal);
+    const { goal } = this.state;
+    const tempGoal = Object.assign({}, goal);
     tempGoal.name = name;
+
+    console.log('new goal ->', { tempGoal });
 
     this.setState({ goal: tempGoal });
   };
 
   updateGoalDate = date => {
-    const tempGoal = Object.assign({}, this.state.goal);
+    const { goal } = this.state;
+    const tempGoal = Object.assign({}, goal);
     tempGoal.dtGoal = date;
 
     this.setState({ goal: tempGoal });
@@ -88,7 +95,7 @@ class NewGoalFlow extends Component {
     const flowStep = navigation.getParam('step', 0);
     const { goal } = this.state;
 
-    console.log('goal -> ', goal)
+    const placeholderIndex = Math.floor(Math.random() * placeholdersExamples.length);
 
     return (
       <Container>
@@ -97,16 +104,16 @@ class NewGoalFlow extends Component {
             flex: 1,
             justifyContent: 'center',
             alignContent: 'center',
-            padding: 20
+            padding: 20,
           }}
         >
           {flowStep === 0 && (
             <View>
-              <Text style={{ color: 'white', fontSize: 40 }}>EU</Text>
-              <Text style={{ color: 'white', fontSize: 40 }}>QUERO</Text>
+              <NormalText>EU</NormalText>
+              <NormalText>QUERO</NormalText>
               <InputText
-                style={{ marginLeft: 25 }}
-                placeholder="Correr 5 Km..."
+                placeholder={placeholdersExamples[placeholderIndex]}
+                textValue={goal.name || ''}
                 onChange={value => this.updateGoalName(value)}
               />
             </View>
@@ -114,34 +121,21 @@ class NewGoalFlow extends Component {
 
           {flowStep === 1 && (
             <View>
-              <Text style={{ color: 'white', fontSize: 40 }}>TENHO ATÉ</Text>
-              <DateInput
-                defaultDate={goal.dtGoal}
-                onChange={value => this.updateGoalDate(value)}
-              />
-              <Text style={{ color: 'white', fontSize: 40, marginLeft: 30 }}>
-                PARA
-              </Text>
-              <Text style={{ color: '#232855', fontSize: 40, marginLeft: 10 }}>
-                {goal.name ? goal.name.toUpperCase() : ''}
-              </Text>
+              <NormalText>TENHO ATÉ</NormalText>
+              <InputDate defaultDate={goal.dtGoal} onChange={value => this.updateGoalDate(value)} />
+              <Text style={{ color: 'white', fontSize: 40, marginLeft: 30 }}>PARA</Text>
+              <HighlightText>{goal.name ? goal.name.toUpperCase() : ''}</HighlightText>
             </View>
           )}
 
           {flowStep === 2 && (
             <View>
-              <Text style={{ color: 'white', fontSize: 40 }}>TE MOTIVAREMOS DIARIAMENTE</Text>
-              <Text style={{ color: 'white', fontSize: 40, marginLeft: 20 }}>
-                A ATINGIR SUA
-              </Text>
-              <Text style={{ color: 'white', fontSize: 40 }}>META DE</Text>
-              <Text style={{ color: '#232855', fontSize: 40, marginLeft: 10 }}>
-                {goal.name ? goal.name.toUpperCase() : ''}
-              </Text>
-              <Text style={{ color: 'white', fontSize: 40 }}>ATÉ</Text>
-              <Text style={{ color: '#232855', fontSize: 40, marginLeft: 10 }}>
-                {goal.dtGoal ? Moment(goal.dtGoal).format('DD/MM/YYYY') : ''}
-              </Text>
+              <NormalText>TE MOTIVAREMOS DIARIAMENTE</NormalText>
+              <Text style={{ color: 'white', fontSize: 40, marginLeft: 20 }}>A ATINGIR SUA</Text>
+              <NormalText>META DE</NormalText>
+              <HighlightText>{goal.name ? goal.name.toUpperCase() : ''}</HighlightText>
+              <NormalText>ATÉ</NormalText>
+              <HighlightText>{goal.dtGoal ? Moment(goal.dtGoal).format('DD/MM/YYYY') : ''}</HighlightText>
             </View>
           )}
         </View>
@@ -149,28 +143,29 @@ class NewGoalFlow extends Component {
           style={{
             flexDirection: 'row',
             justifyContent: 'flex-end',
-            padding: 20
+            padding: 20,
           }}
         >
-          <Button
-            primary
-            text=">>"
-            onPress={() => this.nextStep(flowStep + 1)}
-          />
+          <Button primary text=">>" onPress={() => this.nextStep(flowStep + 1)} />
         </View>
       </Container>
     );
   }
 }
 
-function mapStateToProps(state, props) {
+function mapStateToProps(state) {
   return {
-    newGoal: state.goalReducer.newGoal
+    newGoal: state.goalReducer.newGoal,
   };
 }
 
-//Connect everything
+NewGoalFlow.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  createGoal: PropTypes.func.isRequired,
+};
+
+// Connect everything
 export default connect(
   mapStateToProps,
-  { createGoal }
+  { createGoal },
 )(NewGoalFlow);

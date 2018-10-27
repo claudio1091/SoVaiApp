@@ -3,9 +3,9 @@ import { View, YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
 
 import store from './src/store';
-import { AppStack } from './src/routes';
+import AppStack from './src/routes';
 
-export default class App extends Component {
+class App extends Component {
   componentDidMount() {
     YellowBox.ignoreWarnings(['Require cycle']);
   }
@@ -14,9 +14,11 @@ export default class App extends Component {
     return (
       <Provider store={store}>
         <View style={{ flex: 1 }}>
-          <AppStack persistenceKey={'NavigationStateDEV'} />
+          <AppStack />
         </View>
       </Provider>
     );
   }
 }
+
+export default App;

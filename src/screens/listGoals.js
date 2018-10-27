@@ -1,75 +1,64 @@
-'use strict';
-
 import React, { Component } from 'react';
-import { StyleSheet, View, AsyncStorage, FlatList, Text } from 'react-native';
+import { AsyncStorage, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { ListView, Tile, Title, Subtitle, Divider, Spinner } from '@shoutem/ui';
+import PropTypes from 'prop-types';
 
-import Container from '../components/container';
+import Container from '../components/Container';
 import Button from '../components/Button';
-import GoalListItem from '../components/goalListItem';
+import ListItemGoal from '../components/ListItemGoal';
+
 import { createGoal, getGoals } from '../actions/goalActions';
-import Goal from '../model/goalModel';
 
 class ListGoals extends Component {
   async componentDidMount() {
+    const { getGoals } = this.props;
     let user = await AsyncStorage.getItem('user');
+
     user = JSON.parse(user);
-    console.log('Getting goals ->', user.uid);
-    this.props.getGoals(user.uid, this.onError);
-  }
-
-  newGoal = () => {
-    this.props.navigation.navigate('NewGoalFlow', {
-      step: 0
-    });
-
-    return;
-    /*
-    let user = await AsyncStorage.getItem('user');
-    user = JSON.parse(user);
-    let goal = new Goal(user.uid, 'New New', new Date());
-    goal.repeatInDays();
-    goal.archive();
-
-    this.props.createGoal(goal, this.onSuccess, this.onError);
-    */
-  };
-
-  onSuccess(user) {
-    console.log(user);
+    getGoals(user.uid, this.onError);
   }
 
   onError(error) {
     console.log(error);
   }
 
-  renderItem = ({ item }) => <GoalListItem id={item._id} item={item} />;
+  createNewGoal = () => {
+    const { navigation } = this.props;
+
+    navigation.navigate('NewGoalFlow', {
+      step: 0,
+    });
+  };
+
+  renderItem = ({ item }) => <ListItemGoal id={item.id} item={item} />;
 
   render() {
+    const { goals } = this.props;
+
     return (
       <Container>
-        <Button primary text="Novo" onPress={() => this.newGoal()} />
-        <FlatList
-          style={{ flex: 1 }}
-          data={this.props.goals}
-          keyExtractor={(item, index) => item._id}
-          renderItem={this.renderItem}
-        />
+        <Button primary text="Novo" onPress={() => this.createNewGoal()} />
+        <FlatList style={{ flex: 1 }} data={goals} keyExtractor={item => item.id} renderItem={this.renderItem} />
       </Container>
     );
   }
 }
 
-function mapStateToProps(state, props) {
+function mapStateToProps(state) {
   return {
     isLoading: state.goalReducer.isLoading,
-    goals: state.goalReducer.goals
+    goals: state.goalReducer.goals,
   };
 }
 
-//Connect everything
+ListGoals.propTypes = {
+  goals: PropTypes.array,
+  navigation: PropTypes.object.isRequired,
+  getGoals: PropTypes.func.isRequired,
+};
+
+// Connect everything
 export default connect(
   mapStateToProps,
-  { createGoal, getGoals }
+  { createGoal, getGoals },
 )(ListGoals);

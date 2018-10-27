@@ -1,13 +1,26 @@
-'use strict';
-
 import React, { Component } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import styled from 'styled-components/native';
 
-import Container from '../components/container';
-import InputText from '../components/inputText';
 import Button from '../components/Button';
+import Container from '../components/Container';
+import InputText from '../components/InputText';
+
 import { login } from '../actions/authActions';
+
+const Logo = styled.Image`
+  height: 150;
+  margin-vertical: 30;
+  width: 150;
+`;
+
+const ButtonsContainer = styled.View`
+  flex-direction: 'row';
+  justify-content: 'space-between';
+  width: 305;
+`;
 
 class SingIn extends Component {
   constructor(props) {
@@ -15,66 +28,56 @@ class SingIn extends Component {
 
     this.state = {
       email: null,
-      password: null
+      password: null,
     };
 
     this.renderItem = this.renderItem.bind(this);
   }
 
-  navigateSingUp = () => {
-    this.props.navigation.navigate('SingUp');
+  onSingInSuccess(user) {
+    const { navigation } = this.props;
+    navigation.navigate('ListScrn');
+  }
+
+  onSingInError(error) {
+    console.log(error);
+  }
+
+  navigateToSingUp = () => {
+    const { navigation } = this.props;
+    navigation.navigate('SingUp');
   };
 
   singIn = () => {
-    console.log(this.state);
-    this.props.login(this.state, this.onSuccess.bind(this), this.onError);
+    const { login } = this.props;
+    login(this.state, this.onSingInSuccess.bind(this), this.onSingInError);
   };
-
-  onSuccess(user) {
-    console.log('user ->', user);
-    this.props.navigation.navigate('ListScrn');
-  }
-
-  onError(error) {
-    console.log(error);
-  }
 
   render() {
     return (
       <Container>
-        <Image
-          style={{ width: 150, height: 150, marginVertical: 30 }}
-          source={require('../assets/icon.png')}
-        />
+        <Logo source={require('../assets/icon.png')} />
         <View>
-          <InputText
-            placeholder="Email"
-            onChange={value => this.setState({ email: value })}
-          />
-          <InputText
-            isSecure
-            placeholder="Senha"
-            onChange={value => this.setState({ password: value })}
-          />
+          <InputText placeholder="Email" onChange={value => this.setState({ email: value })} />
+          <InputText isSecure placeholder="Senha" onChange={value => this.setState({ password: value })} />
 
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: 305
-            }}
-          >
-            <Button text="CADASTRAR" onPress={this.navigateSingUp} />
+          <ButtonsContainer>
+            <Button text="CADASTRAR" onPress={this.navigateToSingUp} />
             <Button primary text="ENTRAR" onPress={() => this.singIn()} />
-          </View>
+          </ButtonsContainer>
         </View>
       </Container>
     );
   }
 }
 
-//Connect everything
+SingIn.propTypes = {
+  login: PropTypes.object.isRequired,
+  navigation: PropTypes.object.isRequired,
+};
+
+// Connect everything
 export default connect(
   null,
-  { login }
+  { login },
 )(SingIn);
