@@ -7,9 +7,9 @@ import Moment from 'moment';
 
 const Background = styled.ImageBackground`
   border-radius: 10;
-  flex-direction: 'column';
+  flex-direction: column;
   height: 190;
-  justify-content: 'space-between';
+  justify-content: space-between;
   margin: 10;
   padding: 25;
   flex: 1;
@@ -22,7 +22,7 @@ const BackgroundOverlay = styled.View`
   border-width: 1;
   bottom: 0;
   left: 0;
-  position: 'absolute';
+  position: absolute;
   right: 0;
   top: 0;
 `;

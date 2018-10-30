@@ -16,8 +16,8 @@ const Logo = styled.Image`
 `;
 
 const ButtonsContainer = styled.View`
-  flex-direction: 'row';
-  justify-content: 'space-between';
+  flex-direction: row;
+  justify-content: space-between;
   width: 305;
 `;
 
@@ -63,8 +63,8 @@ class SingUp extends Component {
 }
 
 SingUp.propTypes = {
-  register: PropTypes.object.isRequired,
-  navigation: PropTypes.object.isRequired,
+  register: PropTypes.any.isRequired,
+  navigation: PropTypes.any.isRequired,
 };
 
 // Connect everything

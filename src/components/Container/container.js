@@ -5,12 +5,13 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import { color } from '../../styles/theme';
 
-const Content = styled.KeyboardAvoidingView`
-  flex: 1;
-  flex-direction: column;
-`;
+function Container({ children, center }) {
+  const Content = styled.KeyboardAvoidingView`
+    flex: 1;
+    flex-direction: column;
+    align-content: center;
+  `;
 
-function Container({ children }) {
   return (
     <Content>
       <LinearGradient
@@ -18,6 +19,8 @@ function Container({ children }) {
         style={{
           flex: 1,
           flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         {children}
@@ -28,6 +31,11 @@ function Container({ children }) {
 
 Container.propTypes = {
   children: PropTypes.array,
+  center: PropTypes.bool,
+};
+
+Container.defaultTypes = {
+  center: false,
 };
 
 export default Container;

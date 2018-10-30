@@ -17,8 +17,8 @@ const Logo = styled.Image`
 `;
 
 const ButtonsContainer = styled.View`
-  flex-direction: 'row';
-  justify-content: 'space-between';
+  flex-direction: row;
+  justify-content: space-between;
   width: 305;
 `;
 
@@ -30,12 +30,11 @@ class SingIn extends Component {
       email: null,
       password: null,
     };
-
-    this.renderItem = this.renderItem.bind(this);
   }
 
   onSingInSuccess(user) {
     const { navigation } = this.props;
+    console.log({ user });
     navigation.navigate('ListScrn');
   }
 
@@ -50,16 +49,24 @@ class SingIn extends Component {
 
   singIn = () => {
     const { login } = this.props;
+    console.log('logando...');
     login(this.state, this.onSingInSuccess.bind(this), this.onSingInError);
   };
 
   render() {
+    const { email, password } = this.state;
+
     return (
       <Container>
         <Logo source={require('../assets/icon.png')} />
         <View>
-          <InputText placeholder="Email" onChange={value => this.setState({ email: value })} />
-          <InputText isSecure placeholder="Senha" onChange={value => this.setState({ password: value })} />
+          <InputText placeholder="Email" textValue={email} onChange={value => this.setState({ email: value })} />
+          <InputText
+            isSecure
+            placeholder="Senha"
+            textValue={password}
+            onChange={value => this.setState({ password: value })}
+          />
 
           <ButtonsContainer>
             <Button text="CADASTRAR" onPress={this.navigateToSingUp} />
@@ -72,8 +79,8 @@ class SingIn extends Component {
 }
 
 SingIn.propTypes = {
-  login: PropTypes.object.isRequired,
-  navigation: PropTypes.object.isRequired,
+  login: PropTypes.any.isRequired,
+  navigation: PropTypes.any.isRequired,
 };
 
 // Connect everything

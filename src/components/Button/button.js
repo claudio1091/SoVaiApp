@@ -5,33 +5,35 @@ import styled from 'styled-components/native';
 const buttonHeight = 50;
 const buttonWidth = 137;
 
-const TouchableContainer = styled.TouchableHighlight`
-  border-radius: 10;
-  height: ${buttonHeight};
-  margin-vertical: 5;
-  width: ${buttonWidth};
-`;
+const Button = props => {
+  const { onPress, text, primary } = props;
 
-const ButtonContainer = styled.View`
-  align-items: center;
-  background-color: ${props => (props.primary ? '#EE6C4D' : 'transparent')};
-  border-color: #ee6c4d;
-  border-radius: 10;
-  border-width: ${props => (props.primary ? 0 : 3)};
-  flex-direction: column;
-  height: ${buttonHeight};
-  justify-content: center;
-  width: ${buttonWidth};
-`;
+  const TouchableContainer = styled.TouchableHighlight`
+    border-radius: 10;
+    height: ${buttonHeight};
+    margin-vertical: 5;
+    width: ${buttonWidth};
+  `;
 
-const ButtonText = styled.Text`
-  color: #fff;
-  font-family: 'roboto-light';
-  font-size: 16;
-  font-weight: 300;
-`;
+  const ButtonContainer = styled.View`
+    align-items: center;
+    background-color: ${primary ? '#EE6C4D' : 'transparent'};
+    border-color: #ee6c4d;
+    border-radius: 10;
+    border-width: ${primary ? 0 : 3};
+    flex-direction: column;
+    height: ${buttonHeight};
+    justify-content: center;
+    width: ${buttonWidth};
+  `;
 
-const Button = ({ text, onPress }) => {
+  const ButtonText = styled.Text`
+    color: #fff;
+    font-family: 'roboto-light';
+    font-size: 16;
+    font-weight: 300;
+  `;
+
   return (
     <TouchableContainer
       underlayColor="#ffffff"
@@ -54,7 +56,7 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-  primary: true,
+  primary: false,
 };
 
 export default Button;
