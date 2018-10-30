@@ -1,6 +1,7 @@
 import firebase from 'react-native-firebase';
+import { database } from '../config/firebase';
 
-//Register the user using email and password
+// Register the user using email and password
 export function register(data, callback) {
   const { email, password, username } = data;
   firebase
@@ -10,7 +11,7 @@ export function register(data, callback) {
     .catch(error => callback(false, null, error));
 }
 
-//Create the user object in realtime database
+// Create the user object in realtime database
 export function createUser(user, callback) {
   const userRef = firebase
     .database()
@@ -24,9 +25,10 @@ export function createUser(user, callback) {
     .catch(error => callback(false, null, { message: error }));
 }
 
-//Sign the user in with their email and password
+// Sign the user in with their email and password
 export function login(data, callback) {
   const { email, password } = data;
+  console.log({ data });
   firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
@@ -34,17 +36,16 @@ export function login(data, callback) {
     .catch(error => callback(false, null, error));
 }
 
-//Get the user object from the realtime firebase.database()
+// Get the user object from the realtime firebase.database()
 export function getUser(user, callback) {
-  firebase
-    .database()
+  database
     .ref('users')
     .child(user.uid)
     .once('value')
-    .then(function(snapshot) {
+    .then(snapshot => {
       const exists = snapshot.val() !== null;
 
-      //if the user exist in the DB, replace the user variable with the returned snapshot
+      // if the user exist in the DB, replace the user variable with the returned snapshot
       if (exists) user = snapshot.val();
 
       const data = { exists, user };
@@ -54,7 +55,7 @@ export function getUser(user, callback) {
     .catch(error => callback(false, null, error));
 }
 
-//Send Password Reset Email
+// Send Password Reset Email
 export function resetPassword(data, callback) {
   const { email } = data;
   firebase
