@@ -37,14 +37,14 @@ export default class Goal {
 
   inflate(data) {
     if (data.id) this.id = data.id;
-    if (data.dtCreate) this.dtCreate = data.dtCreate;
-    if (data.userId) this.userId = data.userId;
-    if (data.name) this.name = data.name;
-    if (data.dtGoal) this.dtGoal = data.dtGoal;
-    if (data.repeatIn) this.repeatIn = data.repeatIn;
-    if (data.notificationTime) this.notificationTime = data.notificationTime;
-    if (data.status) this.status = data.status;
-    if (data.daysAchievement) this.daysAchievement = data.daysAchievement;
-    if (data.goalCategory) this.goalCategory = data.goalCategory;
+    this.dtCreate = data.dtCreate || new Date();
+    this.userId = data.userId || '';
+    this.name = data.name || 'New Goal';
+    this.dtGoal = data.dtGoal || new Date();
+    this.repeatIn = data.repeatIn || 'days';
+    this.notificationTime = data.notificationTime || new Date().setHours(9, 0);
+    this.status = data.status || 'open';
+    this.daysAchievement = data.daysAchievement || [];
+    this.goalCategory = data.goalCategory || '';
   }
 }
