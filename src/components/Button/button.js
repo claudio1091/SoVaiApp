@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { human } from 'react-native-typography';
 import styled from 'styled-components/native';
 
 const buttonHeight = 50;
@@ -28,10 +29,8 @@ const Button = props => {
   `;
 
   const ButtonText = styled.Text`
+    ${robotoWeights.calloutObject};
     color: #fff;
-    font-family: 'roboto-light';
-    font-size: 16;
-    font-weight: 300;
   `;
 
   return (

@@ -27,6 +27,14 @@ const BackgroundOverlay = styled.View`
   top: 0;
 `;
 
+const GoalTitle = styled.Text`
+  ${robotoWeights.lightObject};
+  color: '#232855';
+  font-size: 30;
+  font-weight: 300;
+  elevation: 2;
+`;
+
 const ListItemGoal = ({ item }) => {
   Moment.locale('pt-br');
 
@@ -39,19 +47,7 @@ const ListItemGoal = ({ item }) => {
       imageStyle={{ borderRadius: 10 }}
     >
       <BackgroundOverlay />
-      <Text
-        style={[
-          robotoWeights.light,
-          {
-            color: '#232855',
-            fontSize: 30,
-            fontWeight: '300',
-            elevation: 2,
-          },
-        ]}
-      >
-        {item.name}
-      </Text>
+      <GoalTitle>{item.name}</GoalTitle>
 
       <View>
         <Text
@@ -67,6 +63,9 @@ const ListItemGoal = ({ item }) => {
         >
           {item.repeatIn === 'days' ? 'Diariamente' : '--'} - até {Moment(item.dtGoal).format('DD/MM')}
         </Text>
+        {item.daysAchievement && item.daysAchievement.length ? (
+          <Text>{item.daysAchievement.length} dias concluídos</Text>
+        ) : null}
       </View>
     </Background>
   );

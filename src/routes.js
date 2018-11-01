@@ -3,6 +3,7 @@ import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 
 import AppLoading from './screens/AppLoading';
 import ListGoals from './screens/ListGoals';
+import GoalDetail from './screens/GoalDetail';
 import NewGoalFlow from './screens/NewGoalFlow';
 import SingIn from './screens/SingIn';
 import SingUp from './screens/SingUp';
@@ -35,6 +36,7 @@ const RootStack = createStackNavigator(
   {
     ListScrn: ListGoals,
     NewGoalFlow,
+    GoalDetail,
   },
   {
     initialRouteName: 'ListScrn',
@@ -52,10 +54,11 @@ const RootStack = createStackNavigator(
         fontWeight: '300',
       },
     },
+    transitionConfig,
   },
 );
 
-const AppStack = createSwitchNavigator(
+const AppStack = createStackNavigator(
   {
     AppLoading,
     SingIn,
@@ -65,6 +68,11 @@ const AppStack = createSwitchNavigator(
   {
     initialRouteName: 'AppLoading',
     transitionConfig,
+    headerMode: 'none',
+    mode: 'modal',
+    navigationOptions: {
+      gesturesEnabled: false,
+    },
   },
 );
 
