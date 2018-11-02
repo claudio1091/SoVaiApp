@@ -1,5 +1,7 @@
 export default class Goal {
   constructor(initialData) {
+    if (!initialData) initialData = {};
+
     this.userId = initialData.userId || '';
     this.name = initialData.name || '';
     this.dtGoal = initialData.dtGoal || new Date();

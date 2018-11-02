@@ -43,18 +43,23 @@ class NewGoalFlow extends Component {
   }
 
   persistGoal = async () => {
-    const { createGoal } = this.props;
-    const { goal } = this.state;
-    let user = await AsyncStorage.getItem('user');
+    try {
+      const { createGoal } = this.props;
+      const { goal } = this.state;
 
-    const goalSave = new Goal().inflate(goal);
+      let user = await AsyncStorage.getItem('user');
+      user = await JSON.parse(user);
 
-    user = JSON.parse(user);
-    goalSave.userId = user.uid;
-    goalSave.repeatInDays();
+      const goalSave = new Goal();
+      goalSave.inflate(goal);
 
-    console.log('saving this goal -> ', goalSave);
-    // createGoal(goal, this.onSuccess, this.onError);
+      goalSave.userId = user.uid;
+      goalSave.repeatInDays();
+
+      createGoal(goalSave, this.onSuccess, this.onError);
+    } catch (err) {
+      console.warn(err);
+    }
   };
 
   nextStep = async nextStep => {
@@ -76,8 +81,6 @@ class NewGoalFlow extends Component {
     const { goal } = this.state;
     const tempGoal = Object.assign({}, goal);
     tempGoal.name = name;
-
-    console.log('new goal ->', { tempGoal });
 
     this.setState({ goal: tempGoal });
   };
