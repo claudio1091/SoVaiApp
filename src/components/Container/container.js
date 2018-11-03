@@ -7,8 +7,8 @@ function Container({ children }) {
       style={{
         flex: 1,
         flexDirection: 'column',
-        alignContent: 'center',
         backgroundColor: '##F5F8FB',
+        padding: 20,
       }}
     >
       {children}

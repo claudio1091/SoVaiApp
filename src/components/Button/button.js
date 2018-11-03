@@ -1,36 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { human } from 'react-native-typography';
+import { robotoWeights } from 'react-native-typography';
 import styled from 'styled-components/native';
 
-const buttonHeight = 50;
+const buttonHeight = 60;
 const buttonWidth = 137;
 
 const Button = props => {
   const { onPress, text, primary } = props;
 
   const TouchableContainer = styled.TouchableHighlight`
-    border-radius: 10;
+    border-radius: 60;
     height: ${buttonHeight};
     margin-vertical: 5;
-    width: ${buttonWidth};
   `;
 
   const ButtonContainer = styled.View`
     align-items: center;
     background-color: ${primary ? '#EE6C4D' : 'transparent'};
     border-color: #ee6c4d;
-    border-radius: 10;
+    border-radius: 60;
     border-width: ${primary ? 0 : 3};
     flex-direction: column;
     height: ${buttonHeight};
     justify-content: center;
-    width: ${buttonWidth};
   `;
 
   const ButtonText = styled.Text`
     ${robotoWeights.calloutObject};
-    color: #fff;
+    color: ${primary ? '#FFF' : '#EE6C4D'};
   `;
 
   return (

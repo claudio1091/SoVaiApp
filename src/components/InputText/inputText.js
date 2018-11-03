@@ -8,7 +8,7 @@ const componentWidth = 305;
 
 const Input = styled.TextInput`
   background-color: rgba(255, 255, 255, 0.45);
-  border-radius: 10;
+  border-radius: 50;
   color: #232855;
   font-family: 'roboto-light';
   font-size: 18;
@@ -22,7 +22,6 @@ const Input = styled.TextInput`
   padding-left: ${componentPadding};
   padding-right: ${componentPadding};
   padding-top: ${componentPadding};
-  width: ${componentWidth};
 `;
 
 const InputText = ({ placeholder, isSecure, onChange, textValue }) => {
