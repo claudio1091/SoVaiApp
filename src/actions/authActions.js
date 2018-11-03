@@ -24,10 +24,8 @@ export function createUser(user, successCallback, errorCallback) {
 }
 
 export function login(data, successCallback, errorCallback) {
-  console.log('calling auth action...');
   return dispatch => {
     authHelper.login(data, (success, data, error) => {
-      console.log({ data });
       if (success) {
         if (data.exists) dispatch({ type: actionTypes.LOGGED_IN, data: data.user });
         successCallback(data);

@@ -6,8 +6,10 @@ import store from './src/store';
 import AppStack from './src/routes';
 
 class App extends Component {
-  componentDidMount() {
-    YellowBox.ignoreWarnings(['Require cycle']);
+  constructor(props) {
+    super(props);
+
+    YellowBox.ignoreWarnings(['Require cycle', 'Setting a timer']);
   }
 
   render() {
