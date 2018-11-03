@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, ToastAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
@@ -7,6 +7,8 @@ import styled from 'styled-components/native';
 import Container from '../components/Container';
 import InputText from '../components/InputText';
 import Button from '../components/Button';
+import Loader from '../components/Loader';
+
 import { register } from '../actions/authActions';
 
 const Logo = styled.Image`
@@ -15,47 +17,66 @@ const Logo = styled.Image`
   width: 150;
 `;
 
-const ButtonsContainer = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  width: 305;
-`;
-
 class SingUp extends Component {
   state = {
     username: null,
     email: null,
     password: null,
+    loading: false,
   };
 
-  onSuccess(user) {
-    console.log(user);
-  }
+  onSuccess = () => {
+    const { navigation } = this.props;
 
-  onError(error) {
-    console.log(error);
-  }
+    ToastAndroid.show('Usuário criado com sucesso.', ToastAndroid.SHORT);
+    this.setState({ loading: false }, () => {
+      navigation.navigate('SingIn');
+    });
+  };
+
+  onError = error => {
+    ToastAndroid.show(error.toString(), ToastAndroid.LONG);
+  };
 
   singUp = () => {
     const { register } = this.props;
-    register(this.state, this.onSuccess, this.onError);
+
+    this.setState({ loading: true }, () => {
+      register(this.state, this.onSuccess, this.onError);
+    });
   };
 
   render() {
-    const { navigation } = this.props;
+    const { navigation, loading } = this.props;
 
     return (
       <Container>
-        <Logo source={require('../assets/icon.png')} />
-        <View>
+        <Loader loading={loading} />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            justifyContent: 'center',
+          }}
+        >
+          <View style={{ alignItems: 'center' }}>
+            <Logo source={require('../assets/icon.png')} />
+          </View>
           <InputText placeholder="Nome de Usuário" onChange={value => this.setState({ username: value })} />
           <InputText placeholder="Email" onChange={value => this.setState({ email: value })} />
           <InputText isSecure placeholder="Senha" onChange={value => this.setState({ password: value })} />
+        </View>
 
-          <ButtonsContainer>
-            <Button text="ENTRAR" onPress={() => navigation.navigate('SingIn')} />
-            <Button primary text="CADASTRAR" onPress={() => this.singUp()} />
-          </ButtonsContainer>
+        <View
+          style={{
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            justifyContent: 'center',
+          }}
+        >
+          <Button text="ENTRAR" onPress={() => navigation.navigate('SingIn')} />
+          <Button primary text="CADASTRAR" onPress={() => this.singUp()} />
         </View>
       </Container>
     );

@@ -1,5 +1,6 @@
 import { Animated, Easing } from 'react-native';
-import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
+import { fromLeft, zoomIn } from 'react-navigation-transitions';
 
 import AppLoading from './screens/AppLoading';
 import ListGoals from './screens/ListGoals';
@@ -54,7 +55,7 @@ const RootStack = createStackNavigator(
         fontWeight: '300',
       },
     },
-    transitionConfig,
+    transitionConfig: () => zoomIn(600),
   },
 );
 
@@ -67,7 +68,7 @@ const AppStack = createStackNavigator(
   },
   {
     initialRouteName: 'AppLoading',
-    transitionConfig,
+    transitionConfig: () => fromLeft(600),
     headerMode: 'none',
     mode: 'modal',
     navigationOptions: {

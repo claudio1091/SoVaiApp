@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, ToastAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
@@ -7,6 +7,7 @@ import styled from 'styled-components/native';
 import Button from '../components/Button';
 import Container from '../components/Container';
 import InputText from '../components/InputText';
+import Loader from '../components/Loader';
 
 import { login } from '../actions/authActions';
 
@@ -16,12 +17,6 @@ const Logo = styled.Image`
   width: 150;
 `;
 
-const ButtonsContainer = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  width: 305;
-`;
-
 class SingIn extends Component {
   constructor(props) {
     super(props);
@@ -29,18 +24,22 @@ class SingIn extends Component {
     this.state = {
       email: null,
       password: null,
+      loading: false,
     };
   }
 
-  onSingInSuccess(user) {
+  onSingInSuccess = user => {
     const { navigation } = this.props;
-    console.log({ user });
-    navigation.navigate('ListScrn');
-  }
 
-  onSingInError(error) {
-    console.log(error);
-  }
+    ToastAndroid.show(`Bem vindo ${user.username}`, ToastAndroid.SHORT);
+    this.setState({ loading: false }, () => {
+      navigation.navigate('ListScrn');
+    });
+  };
+
+  onSingInError = error => {
+    ToastAndroid.show(error.toString(), ToastAndroid.LONG);
+  };
 
   navigateToSingUp = () => {
     const { navigation } = this.props;
@@ -49,17 +48,29 @@ class SingIn extends Component {
 
   singIn = () => {
     const { login } = this.props;
-    console.log('logando...');
-    login(this.state, this.onSingInSuccess.bind(this), this.onSingInError);
+
+    this.setState({ loading: true }, () => {
+      login(this.state, this.onSingInSuccess.bind(this), this.onSingInError);
+    });
   };
 
   render() {
-    const { email, password } = this.state;
+    const { email, password, loading } = this.state;
 
     return (
       <Container>
-        <Logo source={require('../assets/icon.png')} />
-        <View>
+        <Loader loading={loading} />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            justifyContent: 'center',
+          }}
+        >
+          <View style={{ alignItems: 'center' }}>
+            <Logo source={require('../assets/icon.png')} />
+          </View>
           <InputText placeholder="Email" textValue={email} onChange={value => this.setState({ email: value })} />
           <InputText
             isSecure
@@ -67,11 +78,16 @@ class SingIn extends Component {
             textValue={password}
             onChange={value => this.setState({ password: value })}
           />
-
-          <ButtonsContainer>
-            <Button text="CADASTRAR" onPress={this.navigateToSingUp} />
-            <Button primary text="ENTRAR" onPress={() => this.singIn()} />
-          </ButtonsContainer>
+        </View>
+        <View
+          style={{
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            justifyContent: 'center',
+          }}
+        >
+          <Button text="CADASTRAR" onPress={this.navigateToSingUp} />
+          <Button primary text="ENTRAR" onPress={() => this.singIn()} />
         </View>
       </Container>
     );
