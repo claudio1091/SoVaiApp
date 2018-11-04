@@ -9,18 +9,19 @@ import Container from '../components/Container';
 import Button from '../components/Button';
 import InputText from '../components/InputText';
 import InputDate from '../components/InputDate';
+import Loader from '../components/Loader';
 
 import { createGoal } from '../actions/goalActions';
 import Goal from '../model/goalModel';
 
 const NormalText = styled.Text`
-  color: white;
+  color: #232855;
   font-size: 40;
   font-weight: 300;
 `;
 
 const HighlightText = styled(NormalText)`
-  color: #232855;
+  color: #ee6c4d;
 `;
 
 const placeholdersExamples = ['Correr 5km', 'Perder 5kg', 'Ir á academia todos os dias', 'Economizar 5 Reais'];
@@ -28,19 +29,27 @@ const placeholdersExamples = ['Correr 5km', 'Perder 5kg', 'Ir á academia todos 
 class NewGoalFlow extends Component {
   constructor(props) {
     super(props);
+    const { navigation } = this.props;
+    const goalParam = navigation.getParam('goal', new Goal());
+
     this.state = {
-      goal: new Goal({ status: 'open' }),
+      goal: goalParam,
+      loading: false,
     };
   }
 
-  onSuccess(user) {
+  onSuccess = user => {
     const { navigation } = this.props;
-    navigation.navigate('ListScrn');
-  }
 
-  onError(error) {
+    this.setState({ loading: false }, () => {
+      navigation.navigate('ListScrn');
+    });
+  };
+
+  onError = error => {
     console.log(error);
-  }
+    this.setState({ loading: false });
+  };
 
   persistGoal = async () => {
     try {
@@ -59,6 +68,7 @@ class NewGoalFlow extends Component {
       createGoal(goalSave, this.onSuccess, this.onError);
     } catch (err) {
       console.warn(err);
+      this.setState({ loading: false });
     }
   };
 
@@ -66,12 +76,14 @@ class NewGoalFlow extends Component {
     const { goal } = this.state;
     const { navigation } = this.props;
 
-    if (nextStep >= 3) {
+    if (nextStep >= 4) {
       // save the goal
-      return this.persistGoal();
+      return this.setState({ loading: true }, () => {
+        this.persistGoal();
+      });
     }
 
-    return navigation.navigate('NewGoalFlow', {
+    return navigation.navigate(`Step${nextStep}`, {
       step: nextStep,
       goal,
     });
@@ -95,13 +107,14 @@ class NewGoalFlow extends Component {
 
   render() {
     const { navigation } = this.props;
-    const flowStep = navigation.getParam('step', 0);
-    const { goal } = this.state;
+    const flowStep = navigation.getParam('step', 1);
+    const { goal, loading } = this.state;
 
     const placeholderIndex = Math.floor(Math.random() * placeholdersExamples.length);
 
     return (
       <Container>
+        <Loader loading={loading} />
         <View
           style={{
             flex: 1,
@@ -110,10 +123,10 @@ class NewGoalFlow extends Component {
             padding: 20,
           }}
         >
-          {flowStep === 0 && (
+          {flowStep === 1 && (
             <View>
               <NormalText>EU</NormalText>
-              <NormalText>QUERO</NormalText>
+              <NormalText style={{ marginLeft: 40 }}>QUERO</NormalText>
               <InputText
                 placeholder={placeholdersExamples[placeholderIndex]}
                 textValue={goal.name || ''}
@@ -122,35 +135,35 @@ class NewGoalFlow extends Component {
             </View>
           )}
 
-          {flowStep === 1 && (
+          {flowStep === 2 && (
             <View>
-              <NormalText>TENHO ATÉ</NormalText>
+              <NormalText>QUERO</NormalText>
+              <HighlightText style={{ marginLeft: 35 }}>{goal.name ? goal.name.toUpperCase() : ''}</HighlightText>
+              <NormalText style={{ marginLeft: 60 }}>ATÉ</NormalText>
               <InputDate defaultDate={goal.dtGoal} onChange={value => this.updateGoalDate(value)} />
-              <Text style={{ color: 'white', fontSize: 40, marginLeft: 30 }}>PARA</Text>
-              <HighlightText>{goal.name ? goal.name.toUpperCase() : ''}</HighlightText>
             </View>
           )}
 
-          {flowStep === 2 && (
+          {flowStep === 3 && (
             <View>
-              <NormalText>TE MOTIVAREMOS DIARIAMENTE</NormalText>
-              <Text style={{ color: 'white', fontSize: 40, marginLeft: 20 }}>A ATINGIR SUA</Text>
+              <NormalText>TE MOTIVAREMOS</NormalText>
+              <HighlightText style={{ marginLeft: 35 }}>DIARIAMENTE</HighlightText>
+              <NormalText style={{ textAlign: 'right' }}>A ATINGIR SUA</NormalText>
               <NormalText>META DE</NormalText>
-              <HighlightText>{goal.name ? goal.name.toUpperCase() : ''}</HighlightText>
-              <NormalText>ATÉ</NormalText>
-              <HighlightText>{goal.dtGoal ? Moment(goal.dtGoal).format('DD/MM/YYYY') : ''}</HighlightText>
+              <HighlightText style={{ textAlign: 'center' }}>{goal.name ? goal.name.toUpperCase() : ''}</HighlightText>
+              <NormalText style={{ textAlign: 'right' }}>ATÉ</NormalText>
+              <HighlightText style={{ textAlign: 'right' }}>
+                {goal.dtGoal ? Moment(goal.dtGoal).format('DD/MM/YYYY') : ''}
+              </HighlightText>
             </View>
           )}
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            padding: 20,
-          }}
-        >
-          <Button primary text=">>" onPress={() => this.nextStep(flowStep + 1)} />
-        </View>
+        {flowStep !== 1 ? <Button text="Voltar" onPress={() => this.nextStep(flowStep - 1)} /> : null}
+        {flowStep !== 3 ? (
+          <Button primary text="Próximo" onPress={() => this.nextStep(flowStep + 1)} />
+        ) : (
+          <Button primary text="Só Vai!!" onPress={() => this.nextStep(flowStep + 1)} />
+        )}
       </Container>
     );
   }
