@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Container from '../components/Container';
-import Button from '../components/Button';
 import ListItemGoal from '../components/ListItemGoal';
+import FloatButton from '../components/FloatButton';
 
 import { createGoal, getGoals } from '../actions/goalActions';
 
@@ -25,20 +25,24 @@ class ListGoals extends Component {
   createNewGoal = () => {
     const { navigation } = this.props;
 
-    navigation.navigate('NewGoalFlow', {
-      step: 0,
-    });
+    navigation.navigate('Step1');
   };
 
-  renderItem = ({ item }) => <ListItemGoal id={item.id} item={item} />;
+  navigateDetail = item => {
+    const { navigation } = this.props;
+
+    navigation.navigate('GoalDetail', { goal: item });
+  };
+
+  renderItem = ({ item }) => <ListItemGoal id={item.id} item={item} onPress={item => this.navigateDetail(item)} />;
 
   render() {
     const { goals } = this.props;
 
     return (
       <Container>
-        <Button primary text="Novo" onPress={() => this.createNewGoal()} />
         <FlatList style={{ flex: 1 }} data={goals} keyExtractor={item => item.id} renderItem={this.renderItem} />
+        <FloatButton iconName="plus" onPress={() => this.createNewGoal()} />
       </Container>
     );
   }
