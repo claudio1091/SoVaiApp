@@ -10,7 +10,7 @@ const componentWidth = 305;
 
 const DateText = styled.Text`
   background-color: rgba(255, 255, 255, 0.45);
-  border-radius: 10;
+  border-radius: 50;
   color: #232855;
   font-family: 'roboto-light';
   font-size: 18;
@@ -25,7 +25,6 @@ const DateText = styled.Text`
   padding-right: ${componentPadding};
   padding-top: ${componentPadding};
   text-align: center;
-  width: ${componentWidth};
 `;
 
 const InputDate = ({ defaultDate, defaultFormat, onChange }) => {
