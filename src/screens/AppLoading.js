@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
 import { AsyncStorage } from 'react-native';
-import { Spinner } from '@shoutem/ui';
 
 import Container from '../components/Container';
+import Loader from '../components/Loader';
 
 class AppLoading extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+    };
+  }
+
   async componentDidMount() {
     // try read Storage and retrieve user
     const { navigation } = this.props;
@@ -12,22 +20,29 @@ class AppLoading extends Component {
     try {
       let user = await AsyncStorage.getItem('user');
       user = JSON.parse(user);
-      console.log({ user });
 
       if (user.uid && user.username) {
-        navigation.navigate('RootStack');
+        this.setState({ loading: false }, () => {
+          navigation.navigate('RootStack');
+        });
       } else {
-        navigation.navigate('SingIn');
+        this.setState({ loading: false }, () => {
+          navigation.navigate('SingIn');
+        });
       }
     } catch (err) {
-      navigation.navigate('SingIn');
+      this.setState({ loading: false }, () => {
+        navigation.navigate('SingIn');
+      });
     }
   }
 
   render() {
+    const { loading } = this.state;
+
     return (
       <Container>
-        <Spinner />
+        <Loader loading={loading} />
       </Container>
     );
   }
