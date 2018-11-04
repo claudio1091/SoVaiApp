@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@shoutem/ui": "^0.23.4",
+    "babel-polyfill": "^6.26.0",
     "firebase": "^5.5.5",
     "moment": "^2.22.2",
     "nanoid": "^1.3.0",
@@ -19,6 +20,7 @@
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.3",
     "react-native-blur": "^3.2.2",
+    "react-native-calendars": "^1.21.0",
     "react-native-firebase": "^5.0.0",
     "react-native-redux-listener": "^0.3.0",
     "react-native-typography": "^1.4.0",
