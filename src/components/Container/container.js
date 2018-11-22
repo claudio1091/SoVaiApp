@@ -9,6 +9,7 @@ function Container({ children }) {
         flexDirection: 'column',
         backgroundColor: '#F5F8FB',
         padding: 10,
+        paddingBottom: 2,
       }}
     >
       {children}

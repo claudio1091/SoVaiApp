@@ -4,9 +4,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
 import Moment from 'moment';
+import firebase from 'react-native-firebase';
 
 import Container from '../components/Container';
 import Button from '../components/Button';
+import InputText from '../components/InputText';
 import FormTextInput from '../components/FormTextInput';
 import InputDate from '../components/InputDate';
 import Loader from '../components/Loader';
@@ -25,12 +27,12 @@ const HighlightText = styled(NormalText)`
 `;
 
 const placeholdersExamples = [
-  'Correr 5km', 
-  'Manter uma alimentação saudável', 
-  'Ir á academia', 
+  'Correr 5km',
+  'Manter uma alimentação saudável',
+  'Ir á academia',
   'Guardar R$ 2,00',
   'Organizar agenda',
-  'Rever material de estudos'
+  'Rever material de estudos',
 ];
 
 class NewGoalFlow extends Component {
@@ -85,10 +87,29 @@ class NewGoalFlow extends Component {
     const { navigation } = this.props;
 
     if (nextStep >= 4) {
-      // save the goal
-      return this.setState({ loading: true }, () => {
+      const advert = firebase.admob().interstitial('ca-app-pub-5398707650805959/6007401811');
+      const AdRequest = firebase.admob.AdRequest;
+      const request = new AdRequest();
+
+      request
+        .addKeyword('metas')
+        .addKeyword('planejamento')
+        .addKeyword('fitness')
+        .addKeyword('familia')
+        .addKeyword('2019')
+        .addKeyword('celular');
+
+      advert.loadAd(request.build());
+      advert.on('onAdLoaded', () => {
+        advert.show();
         this.persistGoal();
       });
+
+      advert.on('onAdFailedToLoad', () => {
+        this.persistGoal();
+      });
+
+      return this.setState({ loading: true });
     }
 
     return navigation.navigate(`Step${nextStep}`, {
@@ -100,7 +121,7 @@ class NewGoalFlow extends Component {
   updateGoalName = name => {
     const { goal } = this.state;
     const tempGoal = Object.assign({}, goal);
-    tempGoal.name = name.toUpperCase();
+    tempGoal.name = name;
 
     this.setState({ goal: tempGoal });
   };
@@ -135,14 +156,10 @@ class NewGoalFlow extends Component {
             <View>
               <NormalText>EU</NormalText>
               <NormalText style={{ marginLeft: 40 }}>QUERO</NormalText>
-              <FormTextInput
+              <InputText
                 placeholder={placeholdersExamples[placeholderIndex]}
                 textValue={goal.name || ''}
-                returnKeyType="done"
-                onSubmitEditing={() => {
-                  this.nextStep(flowStep + 1)
-                }}
-                onChangeText={value => this.updateGoalName(value)}
+                onChange={value => this.updateGoalName(value)}
               />
             </View>
           )}
@@ -169,7 +186,6 @@ class NewGoalFlow extends Component {
               </HighlightText>
             </View>
           )}
-
         </View>
 
         {flowStep !== 1 ? <Button text="Voltar" onPress={() => this.nextStep(flowStep - 1)} /> : null}

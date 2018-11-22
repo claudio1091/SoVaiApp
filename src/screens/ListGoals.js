@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { AsyncStorage, FlatList } from 'react-native';
+import { AsyncStorage, FlatList, View } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import firebase from 'react-native-firebase';
 
 import Container from '../components/Container';
 import Loader from '../components/Loader';
@@ -11,6 +12,10 @@ import FloatButton from '../components/FloatButton';
 import { createGoal, getGoals } from '../actions/goalActions';
 
 class ListGoals extends Component {
+  static navigationOptions = {
+    title: 'Suas Metas',
+  };
+
   async componentDidMount() {
     const { getGoals } = this.props;
     let user = await AsyncStorage.getItem('user');
@@ -39,6 +44,7 @@ class ListGoals extends Component {
 
   render() {
     const { isLoading, goals } = this.props;
+    const Banner = firebase.admob.Banner;
 
     return (
       <Container>
@@ -49,6 +55,15 @@ class ListGoals extends Component {
           keyExtractor={item => item.id || item.name}
           renderItem={this.renderItem}
         />
+        <View style={{ justifyContent: 'center' }}>
+          <Banner
+            unitId="ca-app-pub-5398707650805959/3265688402"
+            size="BANNER"
+            onAdLoaded={() => {
+              console.log('Advert loaded');
+            }}
+          />
+        </View>
         <FloatButton iconName="plus" onPress={() => this.createNewGoal()} />
       </Container>
     );

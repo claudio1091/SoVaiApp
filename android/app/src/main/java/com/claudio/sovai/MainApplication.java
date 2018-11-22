@@ -7,6 +7,8 @@ import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import io.invertase.firebase.admob.RNFirebaseAdMobPackage;
 import com.google.firebase.database.FirebaseDatabase;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.reactnative.photoview.PhotoViewPackage;
@@ -36,6 +38,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFirebaseDatabasePackage(),
             new RNFirebaseAuthPackage(),
             new RNFirebaseMessagingPackage(),
+            new RNFirebaseNotificationsPackage(),
+            new RNFirebaseAdMobPackage(),
             new BlurViewPackage(),
             new PhotoViewPackage(),
             new LinearGradientPackage(),
