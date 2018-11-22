@@ -76,11 +76,6 @@ class GoalDetail extends Component {
     this.setState({ loading: false });
   };
 
-  onNavigateWillBlur = async () => {
-    // Save to AsyncStorage
-    this.setState({ loading: true }, () => {});
-  };
-
   markerGoalDate = date => {
     const { goal } = this.state;
     const dateFormatted = new Date();
@@ -100,13 +95,7 @@ class GoalDetail extends Component {
     this.setState({ goal });
   };
 
-  saveGoal = async () => {
-    try {
-      await AsyncStorage.setItem('@MySuperStore:key', 'I like to save it.');
-    } catch (error) {
-      // Error saving data
-    }
-
+  saveGoal = () => {
     try {
       const { updateGoal } = this.props;
       const { goal } = this.state;
@@ -143,12 +132,7 @@ class GoalDetail extends Component {
       <Container>
         <Loader loading={loading} />
 
-        <NavigationEvents
-          onWillFocus={payload => console.log('will focus', payload)}
-          onDidFocus={payload => console.log('did focus', payload)}
-          onWillBlur={payload => console.log('will blur', payload)}
-          onDidBlur={payload => console.log('did blur', payload)}
-        />
+        <NavigationEvents onWillBlur={() => this.saveGoal()} />
 
         <ScrollView>
           <GoalTitle>{goal.name.toUpperCase()}</GoalTitle>
