@@ -41,7 +41,12 @@ class ListGoals extends Component {
 
     return (
       <Container>
-        <FlatList style={{ flex: 1 }} data={goals} keyExtractor={item => item.id} renderItem={this.renderItem} />
+        <FlatList
+          style={{ flex: 1 }}
+          data={goals}
+          keyExtractor={item => item.id || item.name}
+          renderItem={this.renderItem}
+        />
         <FloatButton iconName="plus" onPress={() => this.createNewGoal()} />
       </Container>
     );

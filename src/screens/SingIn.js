@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { View, ToastAndroid } from 'react-native';
+import { View, ToastAndroid, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
 
 import Button from '../components/Button';
 import Container from '../components/Container';
-import InputText from '../components/InputText';
 import Loader from '../components/Loader';
+import FormTextInput from '../components/inputTextStyled';
 
 import { login } from '../actions/authActions';
 
@@ -38,7 +38,9 @@ class SingIn extends Component {
   };
 
   onSingInError = error => {
-    ToastAndroid.show(error.toString(), ToastAndroid.LONG);
+    this.setState({ loading: false }, () => {
+      ToastAndroid.show(error.toString(), ToastAndroid.LONG);
+    });
   };
 
   navigateToSingUp = () => {
@@ -59,7 +61,7 @@ class SingIn extends Component {
 
     return (
       <Container>
-        <Loader loading={loading} />
+        <Loader loading={loading} color="#DB4437" />
         <View
           style={{
             flex: 1,
@@ -71,14 +73,37 @@ class SingIn extends Component {
           <View style={{ alignItems: 'center' }}>
             <Logo source={require('../assets/icon.png')} />
           </View>
-          <InputText placeholder="Email" textValue={email} onChange={value => this.setState({ email: value })} />
-          <InputText
-            isSecure
-            placeholder="Senha"
-            textValue={password}
-            onChange={value => this.setState({ password: value })}
-          />
+
+          <KeyboardAvoidingView>
+            <FormTextInput
+              autoCapitalize="none"
+              placeholder="Email"
+              textValue={email}
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                this.secondTextInput.focus();
+              }}
+              blurOnSubmit={false}
+              onChangeText={value => this.setState({ email: value })}
+            />
+
+            <FormTextInput
+              autoCapitalize="none"
+              secureTextEntry
+              placeholder="Senha"
+              textValue={password}
+              ref={input => {
+                this.secondTextInput = input;
+              }}
+              onSubmitEditing={() => {
+                this.singIn();
+              }}
+              returnKeyType="done"
+              onChangeText={value => this.setState({ password: value })}
+            />
+          </KeyboardAvoidingView>
         </View>
+
         <View
           style={{
             flexDirection: 'column',

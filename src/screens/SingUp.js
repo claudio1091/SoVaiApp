@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
 
 import Container from '../components/Container';
-import InputText from '../components/InputText';
+import FormTextInput from '../components/inputTextStyled';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
 
@@ -35,7 +35,9 @@ class SingUp extends Component {
   };
 
   onError = error => {
-    ToastAndroid.show(error.toString(), ToastAndroid.LONG);
+    this.setState({ loading: false }, () => {
+      ToastAndroid.show(error.toString(), ToastAndroid.LONG);
+    });
   };
 
   singUp = () => {
@@ -47,7 +49,8 @@ class SingUp extends Component {
   };
 
   render() {
-    const { navigation, loading } = this.props;
+    const { navigation } = this.props;
+    const { username, email, password, loading } = this.state;
 
     return (
       <Container>
@@ -63,9 +66,44 @@ class SingUp extends Component {
           <View style={{ alignItems: 'center' }}>
             <Logo source={require('../assets/icon.png')} />
           </View>
-          <InputText placeholder="Nome de Usuário" onChange={value => this.setState({ username: value })} />
-          <InputText placeholder="Email" onChange={value => this.setState({ email: value })} />
-          <InputText isSecure placeholder="Senha" onChange={value => this.setState({ password: value })} />
+          <FormTextInput
+            placeholder="Nome"
+            textValue={username}
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onSubmitEditing={() => {
+              this.secondTextInput.focus();
+            }}
+            onChangeText={value => this.setState({ username: value })}
+          />
+          <FormTextInput
+            autoCapitalize="none"
+            placeholder="Email"
+            textValue={email}
+            returnKeyType="next"
+            blurOnSubmit={false}
+            onSubmitEditing={() => {
+              this.thirdTextInput.focus();
+            }}
+            ref={input => {
+              this.secondTextInput = input;
+            }}
+            onChangeText={value => this.setState({ email: value })}
+          />
+          <FormTextInput
+            secureTextEntry
+            autoCapitalize="none"
+            placeholder="Senha"
+            textValue={password}
+            returnKeyType="done"
+            onSubmitEditing={() => {
+              this.singUp();
+            }}
+            ref={input => {
+              this.thirdTextInput = input;
+            }}
+            onChangeText={value => this.setState({ password: value })}
+          />
         </View>
 
         <View

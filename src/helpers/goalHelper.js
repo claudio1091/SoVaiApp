@@ -1,10 +1,9 @@
 import { AsyncStorage } from 'react-native';
 import firebase from 'react-native-firebase';
-import { database } from '../config/firebase';
 
 getUserId = async () => {
   try {
-    let user = await AsyncStorage.getItem('user');
+    const user = await AsyncStorage.getItem('user');
     return await JSON.parse(user).uid;
   } catch (err) {
     console.trace({ err });
@@ -12,24 +11,29 @@ getUserId = async () => {
   }
 };
 
-//Create the user object in realtime database
+// Create the user object in realtime database
 export function createGoal(goal, callback) {
-  const { userId } = goal;
-  const goalRef = firebase.database().ref('goals/' + userId);
-  const newGoalRef = goalRef.push(goal);
-  const goalKey = newGoalRef.key;
+  try {
+    const { userId } = goal;
+    const goalRef = firebase.database().ref(`goals/${userId}`);
+    const newGoalRef = goalRef.push(goal);
+    const goalKey = newGoalRef.key;
 
-  goal.id = goalKey;
+    goal.id = goalKey;
+    console.log('goal saved ->', goal);
 
-  let updates = {};
-  updates[`goals/${userId}/${goalKey}`] = goal;
+    const updates = {};
+    updates[`goals/${userId}/${goalKey}`] = goal;
 
-  firebase
-    .database()
-    .ref()
-    .update(updates)
-    .then(() => callback(true, goal, null))
-    .catch(error => callback(false, null, { message: error }));
+    firebase
+      .database()
+      .ref()
+      .update(updates);
+
+    callback(true, goal, null);
+  } catch (error) {
+    callback(false, null, { message: error });
+  }
 }
 
 export async function getGoalsLocalStorage(callback) {
@@ -55,7 +59,7 @@ export async function getGoalsLocalStorage(callback) {
  * @param {function} callback
  */
 export function getGoals(userId, callback) {
-  const goalRef = database.ref('goals/' + userId);
+  const goalRef = firebase.database().ref(`goals/${userId}`);
 
   // listening data modifications
   goalRef.on('value', snapshot => {
@@ -67,7 +71,7 @@ export function getGoals(userId, callback) {
 export function updateGoal(goal, callback) {
   const { id, userId } = goal;
 
-  let updates = {};
+  const updates = {};
   updates[`goals/${userId}/${id}`] = goal;
 
   firebase
