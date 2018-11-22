@@ -1,16 +1,17 @@
 import styled from 'styled-components/native';
+import { robotoWeights } from 'react-native-typography';
 
+const borderRadius = 50;
 const componentHeight = 58;
 const componentPadding = 18;
 
 const FormTextInput = styled.TextInput`
+  ${robotoWeights.lightObject};
   background-color: rgba(255, 255, 255, 0.45);
-  border-radius: 50;
+  border-radius: ${borderRadius};
   color: #232855;
-  font-family: 'roboto-light';
   font-size: 18;
   height: ${componentHeight};
-  margin-vertical: 5;
   margin-bottom: 5;
   margin-left: 5;
   margin-right: 5;

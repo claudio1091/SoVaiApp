@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { robotoWeights } from 'react-native-typography';
 import styled from 'styled-components/native';
+import { robotoWeights } from 'react-native-typography';
 
-const buttonHeight = 60;
-const buttonWidth = 137;
+const buttonHeight = 50;
+const borderRadius = 50;
 
 const Button = props => {
   const { onPress, text, primary } = props;
 
   const TouchableContainer = styled.TouchableHighlight`
-    border-radius: 60;
+    border-radius: ${borderRadius};
     height: ${buttonHeight};
     margin-vertical: 5;
   `;
@@ -19,7 +19,7 @@ const Button = props => {
     align-items: center;
     background-color: ${primary ? '#EE6C4D' : 'transparent'};
     border-color: #ee6c4d;
-    border-radius: 60;
+    border-radius: ${borderRadius};
     border-width: ${primary ? 0 : 3};
     flex-direction: column;
     height: ${buttonHeight};
@@ -47,13 +47,15 @@ const Button = props => {
 };
 
 Button.propTypes = {
-  text: PropTypes.string.isRequired,
-  onPress: PropTypes.func.isRequired,
+  text: PropTypes.string,
+  onPress: PropTypes.func,
   primary: PropTypes.bool,
 };
 
 Button.defaultProps = {
   primary: false,
+  text: 'Button Default',
+  onPress: () => {},
 };
 
 export default Button;

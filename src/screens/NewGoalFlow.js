@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, AsyncStorage, Text } from 'react-native';
+import { View, AsyncStorage, ToastAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
@@ -7,7 +7,7 @@ import Moment from 'moment';
 
 import Container from '../components/Container';
 import Button from '../components/Button';
-import InputText from '../components/InputText';
+import FormTextInput from '../components/FormTextInput';
 import InputDate from '../components/InputDate';
 import Loader from '../components/Loader';
 
@@ -24,7 +24,14 @@ const HighlightText = styled(NormalText)`
   color: #ee6c4d;
 `;
 
-const placeholdersExamples = ['Correr 5km', 'Perder 5kg', 'Ir á academia todos os dias', 'Economizar 5 Reais'];
+const placeholdersExamples = [
+  'Correr 5km', 
+  'Manter uma alimentação saudável', 
+  'Ir á academia', 
+  'Guardar R$ 2,00',
+  'Organizar agenda',
+  'Rever material de estudos'
+];
 
 class NewGoalFlow extends Component {
   constructor(props) {
@@ -49,6 +56,7 @@ class NewGoalFlow extends Component {
   onError = error => {
     console.log(error);
     this.setState({ loading: false });
+    ToastAndroid.show('Houve um problema ao criar uma nova meta.', ToastAndroid.SHORT);
   };
 
   persistGoal = async () => {
@@ -92,7 +100,7 @@ class NewGoalFlow extends Component {
   updateGoalName = name => {
     const { goal } = this.state;
     const tempGoal = Object.assign({}, goal);
-    tempGoal.name = name;
+    tempGoal.name = name.toUpperCase();
 
     this.setState({ goal: tempGoal });
   };
@@ -127,10 +135,14 @@ class NewGoalFlow extends Component {
             <View>
               <NormalText>EU</NormalText>
               <NormalText style={{ marginLeft: 40 }}>QUERO</NormalText>
-              <InputText
+              <FormTextInput
                 placeholder={placeholdersExamples[placeholderIndex]}
                 textValue={goal.name || ''}
-                onChange={value => this.updateGoalName(value)}
+                returnKeyType="done"
+                onSubmitEditing={() => {
+                  this.nextStep(flowStep + 1)
+                }}
+                onChangeText={value => this.updateGoalName(value)}
               />
             </View>
           )}
@@ -157,8 +169,11 @@ class NewGoalFlow extends Component {
               </HighlightText>
             </View>
           )}
+
         </View>
+
         {flowStep !== 1 ? <Button text="Voltar" onPress={() => this.nextStep(flowStep - 1)} /> : null}
+
         {flowStep !== 3 ? (
           <Button primary text="Próximo" onPress={() => this.nextStep(flowStep + 1)} />
         ) : (

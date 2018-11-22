@@ -5,13 +5,9 @@ import Container from '../components/Container';
 import Loader from '../components/Loader';
 
 class AppLoading extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    };
-  }
+  state = {
+    loading: true,
+  };
 
   async componentDidMount() {
     // try read Storage and retrieve user
@@ -19,9 +15,9 @@ class AppLoading extends Component {
 
     try {
       let user = await AsyncStorage.getItem('user');
-      user = JSON.parse(user);
+      user = await JSON.parse(user);
 
-      if (user.uid && user.username) {
+      if (user && user.uid && user.username) {
         this.setState({ loading: false }, () => {
           navigation.navigate('RootStack');
         });

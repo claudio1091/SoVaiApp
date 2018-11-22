@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableNativeFeedback } from 'react-native';
+import { View, TouchableNativeFeedback } from 'react-native';
 import { robotoWeights } from 'react-native-typography';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
@@ -8,15 +8,15 @@ import Moment from 'moment';
 const BackgroundContainer = styled.View`
   background-color: #fff;
   border-radius: 10;
-  padding-top: 15;
-  padding-bottom: 15;
-  padding-right: 15;
-  padding-left: 15;
-  margin-top: 5;
+  elevation: 3;
   margin-bottom: 5;
   margin-left: 3;
   margin-right: 3;
-  elevation: 3;
+  margin-top: 5;
+  padding-bottom: 15;
+  padding-left: 15;
+  padding-right: 15;
+  padding-top: 15;
 `;
 
 const GoalTitle = styled.Text`

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
 
 import Container from '../components/Container';
-import FormTextInput from '../components/inputTextStyled';
+import FormTextInput from '../components/FormTextInput';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
 

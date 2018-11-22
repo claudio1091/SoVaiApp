@@ -1,21 +1,21 @@
 import React from 'react';
-import { DatePickerAndroid } from 'react-native';
+import { DatePickerAndroid, ToastAndroid } from 'react-native';
 import PropTypes from 'prop-types';
-import styled from 'styled-components/native';
 import Moment from 'moment';
+import styled from 'styled-components/native';
+import { robotoWeights } from 'react-native-typography';
 
+const borderRadius = 50;
 const componentHeight = 58;
 const componentPadding = 18;
-const componentWidth = 305;
 
 const DateText = styled.Text`
+  ${robotoWeights.lightObject};
   background-color: rgba(255, 255, 255, 0.45);
-  border-radius: 50;
+  border-radius: ${borderRadius};
   color: #232855;
-  font-family: 'roboto-light';
   font-size: 18;
   height: ${componentHeight};
-  margin-vertical: 5;
   margin-bottom: 5;
   margin-left: 5;
   margin-right: 5;
@@ -41,12 +41,13 @@ const InputDate = ({ defaultDate, defaultFormat, onChange }) => {
       }
     } catch ({ code, message }) {
       console.warn('Cannot open date picker', message);
+      ToastAndroid.show('Houve um problema ao selecionar a data.', ToastAndroid.SHORT);
     }
   };
 
   Moment.locale('pt-br');
 
-  return <DateText onPress={openDatePicker}>{Moment(defaultDate).format(defaultFormat)}</DateText>;
+  return <DateText onPress={openDatePicker} >{Moment(defaultDate).format(defaultFormat)}</DateText>;
 };
 
 InputDate.propTypes = {

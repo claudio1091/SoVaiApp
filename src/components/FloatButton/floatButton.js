@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Animated, Easing, StyleSheet, Dimensions } from 'react-native';
+import { TouchableOpacity, Animated, Easing, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Octicons';
+
+const buttonDimension = 80;
+const buttonRadius = 40;
+const bottomPosition = 20;
 
 const styles = StyleSheet.create({
   touchableStyles: {
@@ -9,22 +14,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#EE6C4D',
     right: 20,
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: buttonDimension,
+    height: buttonDimension,
+    borderRadius: buttonRadius,
     elevation: 6,
     paddingLeft: 10,
   },
   addButton: {
-    // backgroundColor: '#EE6C4D',
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    // flexDirection: 'row',
-    // justifyContent: 'center',
+    width: buttonDimension,
+    height: buttonDimension,
+    borderRadius: buttonRadius,
     alignItems: 'center',
-    // padding: 22,
-    // elevation: 6,
   },
 });
 
@@ -51,7 +51,7 @@ class FloatButton extends Component {
   render() {
     const bottom = this.animatedValue.interpolate({
       inputRange: [0, 1],
-      outputRange: [-100, 20],
+      outputRange: [-100, bottomPosition],
     });
 
     const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
@@ -69,5 +69,15 @@ class FloatButton extends Component {
     );
   }
 }
+
+FloatButton.propTypes = {
+  iconName: PropTypes.string,
+  primary: PropTypes.bool,
+};
+
+FloatButton.defaultProps = {
+  iconName: 'plus',
+  onPress: () => { },
+};
 
 export default FloatButton;

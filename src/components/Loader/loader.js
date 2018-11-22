@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#00000040',
   },
   activityIndicatorWrapper: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F5F8FB',
     height: 100,
     width: 100,
     borderRadius: 10,
@@ -23,15 +23,15 @@ const styles = StyleSheet.create({
 
 const Loader = props => {
   const { loading, color, ...attributes } = props;
-  const spinnerColor = color || '#CCC';
+  const spinnerColor = color || '#EE6C4D';
 
   return (
     <Modal
       transparent
-      animationType="none"
+      animationType="fade"
       visible={loading}
       onRequestClose={() => {
-        console.log('close modal');
+        console.log('closed modal');
       }}
     >
       <View style={styles.modalBackground}>

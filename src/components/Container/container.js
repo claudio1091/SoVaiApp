@@ -7,7 +7,7 @@ function Container({ children }) {
       style={{
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '##F5F8FB',
+        backgroundColor: '#F5F8FB',
         padding: 10,
       }}
     >

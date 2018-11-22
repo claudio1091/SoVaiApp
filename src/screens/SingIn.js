@@ -7,7 +7,7 @@ import styled from 'styled-components/native';
 import Button from '../components/Button';
 import Container from '../components/Container';
 import Loader from '../components/Loader';
-import FormTextInput from '../components/inputTextStyled';
+import FormTextInput from '../components/FormTextInput';
 
 import { login } from '../actions/authActions';
 

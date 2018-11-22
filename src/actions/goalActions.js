@@ -1,17 +1,8 @@
-import firebase from 'react-native-firebase';
 import * as actionTypes from './actionTypes';
 import * as goalHelper from '../helpers/goalHelper';
 
 export function createGoal(goal, successCallback, errorCallback) {
   return dispatch => {
-    console.log('Going offline');
-    firebase.database().goOffline();
-
-    setTimeout(() => {
-      console.log('Going online');
-      firebase.database().goOnline();
-    }, 20000);
-
     goalHelper.createGoal(goal, (success, data, error) => {
       if (success) successCallback(data);
       else if (error) errorCallback(error);
