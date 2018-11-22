@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Container from '../components/Container';
+import Loader from '../components/Loader';
 import ListItemGoal from '../components/ListItemGoal';
 import FloatButton from '../components/FloatButton';
 
@@ -37,10 +38,11 @@ class ListGoals extends Component {
   renderItem = ({ item }) => <ListItemGoal id={item.id} item={item} onPress={item => this.navigateDetail(item)} />;
 
   render() {
-    const { goals } = this.props;
+    const { isLoading, goals } = this.props;
 
     return (
       <Container>
+        <Loader loading={isLoading} />
         <FlatList
           style={{ flex: 1 }}
           data={goals}
