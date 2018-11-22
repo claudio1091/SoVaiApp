@@ -1,9 +1,9 @@
 import React from 'react';
-import { KeyboardAvoidingView } from 'react-native';
+import { View } from 'react-native';
 
 function Container({ children }) {
   return (
-    <KeyboardAvoidingView
+    <View
       style={{
         flex: 1,
         flexDirection: 'column',
@@ -12,7 +12,7 @@ function Container({ children }) {
       }}
     >
       {children}
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 

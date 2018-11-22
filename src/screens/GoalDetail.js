@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, AsyncStorage } from 'react-native';
+import { NavigationEvents } from 'react-navigation';
 import { connect } from 'react-redux';
 import { robotoWeights } from 'react-native-typography';
 import styled from 'styled-components/native';
 import Moment from 'moment';
-import { Calendar } from 'react-native-calendars';
+import { LocaleConfig, Calendar } from 'react-native-calendars';
 
 import Container from '../components/Container';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
+import InputDate from '../components/InputDate';
 
 import { updateGoal } from '../actions/goalActions';
 import Goal from '../model/goalModel';
@@ -19,6 +21,33 @@ const GoalTitle = styled.Text`
   font-size: 45;
   text-align: center;
 `;
+
+const SubTitle = styled.Text`
+  ${robotoWeights.boldObject};
+  color: #232855;
+  font-size: 20;
+  margin-bottom: 12;
+`;
+
+const localeCalendar = {
+  monthNames: [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ],
+  monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dec'],
+  dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+  dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+};
 
 class GoalDetail extends Component {
   constructor(props) {
@@ -47,6 +76,11 @@ class GoalDetail extends Component {
     this.setState({ loading: false });
   };
 
+  onNavigateWillBlur = async () => {
+    // Save to AsyncStorage
+    this.setState({ loading: true }, () => {});
+  };
+
   markerGoalDate = date => {
     const { goal } = this.state;
     const dateFormatted = new Date();
@@ -59,7 +93,20 @@ class GoalDetail extends Component {
     this.setState({ goal });
   };
 
-  saveGoal = () => {
+  updateGoalDate = date => {
+    const { goal } = this.state;
+    goal.dtGoal = date;
+
+    this.setState({ goal });
+  };
+
+  saveGoal = async () => {
+    try {
+      await AsyncStorage.setItem('@MySuperStore:key', 'I like to save it.');
+    } catch (error) {
+      // Error saving data
+    }
+
     try {
       const { updateGoal } = this.props;
       const { goal } = this.state;
@@ -78,6 +125,7 @@ class GoalDetail extends Component {
     const { daysAchievement } = goal;
 
     const markedDates = {};
+    const dateGoalKey = Moment(goal.dtGoal).format('YYYY-MM-DD');
 
     daysAchievement.forEach(day => {
       const markerOptions = { selected: true, selectedColor: '#EE6C4D' };
@@ -86,55 +134,94 @@ class GoalDetail extends Component {
       markedDates[dateKey] = markerOptions;
     });
 
-    console.log(markedDates);
+    markedDates[dateGoalKey] = { selected: true, selectedColor: '#ADB4B9' };
+
+    LocaleConfig.locales['pt-BR'] = localeCalendar;
+    LocaleConfig.defaultLocale = 'pt-BR';
 
     return (
       <Container>
         <Loader loading={loading} />
-        <View>
-          <GoalTitle>{goal.name.toUpperCase()}</GoalTitle>
-        </View>
+
+        <NavigationEvents
+          onWillFocus={payload => console.log('will focus', payload)}
+          onDidFocus={payload => console.log('did focus', payload)}
+          onWillBlur={payload => console.log('will blur', payload)}
+          onDidBlur={payload => console.log('did blur', payload)}
+        />
 
         <ScrollView>
-          <Calendar
-            style={{ borderRadius: 10 }}
-            // Initially visible month. Default = Date()
-            current="2018-11-04"
-            // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
-            minDate="2018-11-01"
-            // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
-            maxDate="2018-11-30"
-            // Handler which gets executed on day press. Default = undefined
-            onDayPress={day => {
-              this.markerGoalDate(day);
+          <GoalTitle>{goal.name.toUpperCase()}</GoalTitle>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+              marginVertical: 10,
             }}
-            // Handler which gets executed on day long press. Default = undefined
-            onDayLongPress={day => {
-              console.log('selected day', day);
+          >
+            <SubTitle>Até</SubTitle>
+            <InputDate
+              style={{ flex: 1 }}
+              defaultDate={new Date(goal.dtGoal)}
+              onChange={value => this.updateGoalDate(value)}
+            />
+          </View>
+
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+              marginVertical: 10,
             }}
-            // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
-            monthFormat="yyyy MM"
-            // Handler which gets executed when visible month changes in calendar. Default = undefined
-            onMonthChange={month => {
-              console.log('month changed', month);
+          >
+            <SubTitle>Dias Concluídos</SubTitle>
+            <Calendar
+              style={{
+                borderRadius: 20,
+                height: 350,
+                elevation: 4,
+              }}
+              theme={{
+                arrowColor: '#EE6C4D',
+                monthTextColor: '#232855',
+                textMonthFontSize: 18,
+              }}
+              // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
+              maxDate={dateGoalKey}
+              // Handler which gets executed on day press. Default = undefined
+              onDayPress={day => {
+                this.markerGoalDate(day);
+              }}
+              // Handler which gets executed on day long press. Default = undefined
+              onDayLongPress={day => {
+                this.markerGoalDate(day);
+              }}
+              // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
+              monthFormat="MMMM"
+              // Handler which gets executed when visible month changes in calendar. Default = undefined
+              onMonthChange={month => {
+                console.log('month changed', month);
+              }}
+              // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday.
+              firstDay={0}
+              // Handler which gets executed when press arrow icon left. It receive a callback can go back month
+              onPressArrowLeft={substractMonth => substractMonth()}
+              // Handler which gets executed when press arrow icon left. It receive a callback can go next month
+              onPressArrowRight={addMonth => addMonth()}
+              // Collection of dates that have to be marked. Default = {}
+              markedDates={markedDates}
+            />
+          </View>
+
+          <View
+            style={{
+              marginTop: 25,
+              marginBottom: 10,
             }}
-            // Do not show days of other months in month page. Default = false
-            hideExtraDays
-            // If hideArrows=false and hideExtraDays=false do not switch month when tapping on greyed out
-            // day from another month that is visible in calendar page. Default = false
-            disableMonthChange
-            // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday.
-            firstDay={1}
-            // Hide day names. Default = false
-            hideDayNames
-            // Handler which gets executed when press arrow icon left. It receive a callback can go back month
-            onPressArrowLeft={substractMonth => substractMonth()}
-            // Handler which gets executed when press arrow icon left. It receive a callback can go next month
-            onPressArrowRight={addMonth => addMonth()}
-            // Collection of dates that have to be marked. Default = {}
-            markedDates={markedDates}
-          />
-          <Button primary text="SALVAR" onPress={() => this.saveGoal()} />
+          >
+            <Button text="concluir" onPress={() => this.saveGoal()} />
+            <Button text="excluir" onPress={() => this.saveGoal()} />
+          </View>
         </ScrollView>
       </Container>
     );

@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
 });
 
 const Loader = props => {
-  const { loading, ...attributes } = props;
+  const { loading, color, ...attributes } = props;
+  const spinnerColor = color || '#CCC';
 
   return (
     <Modal
@@ -35,7 +36,7 @@ const Loader = props => {
     >
       <View style={styles.modalBackground}>
         <View style={styles.activityIndicatorWrapper}>
-          <Spinner animating={loading} style={{ size: 'large' }} />
+          <Spinner animating={loading} style={{ size: 'large', color: spinnerColor }} />
         </View>
       </View>
     </Modal>

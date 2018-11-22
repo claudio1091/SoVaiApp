@@ -40,7 +40,7 @@ const Button = props => {
       onLongPress={evt => (onPress ? onPress(evt) : null)}
     >
       <ButtonContainer>
-        <ButtonText>{text}</ButtonText>
+        <ButtonText>{text.toUpperCase()}</ButtonText>
       </ButtonContainer>
     </TouchableContainer>
   );

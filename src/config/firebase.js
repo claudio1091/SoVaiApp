@@ -8,7 +8,7 @@ const config = {
   databaseURL: constants.FIREBASE_DATABASE_URL,
   projectId: constants.FIREBASE_PROJECT_ID,
   storageBucket: constants.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: constants.FIREBASE_MESSAGING_SENDER_ID
+  messagingSenderId: constants.FIREBASE_MESSAGING_SENDER_ID,
 };
 
 firebase.initializeApp(config);
