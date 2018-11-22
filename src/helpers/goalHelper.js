@@ -33,7 +33,13 @@ export function getGoals(userId, callback) {
 
   // listening data modifications
   goalRef.on('value', snapshot => {
-    callback(true, snapshot);
+    firebase.notifications().cancelAllNotifications()
+    .then(() => {
+      callback(true, snapshot);
+    })
+    .catch(err => {
+      callback(true, snapshot);
+    });
   });
 }
 

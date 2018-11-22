@@ -1,3 +1,4 @@
+import firebase from 'react-native-firebase';
 import Goal from '../model/goalModel';
 import * as actionTypes from '../actions/actionTypes'; //Import the actions types constant we defined in our actions
 
@@ -32,6 +33,27 @@ const goalReducer = (state = initialState, action) => {
           item._status
         );
         goal.inflate(item);
+
+        // make goal notification
+        const notification = new firebase.notifications.Notification()
+          .setNotificationId(goal.id)
+          .setTitle('Msg motivadora aqui')
+          .setBody(`Não esqueça do seu objetivo: ${goal.name}`)
+          .android.setChannelId('so-vai-main-channel')
+          .android.setSmallIcon('ic_launcher')
+          .android.setGroupSummary(true)
+          .android.setGroup(goal.id);
+
+        // Schedule the notification for 10 minutes in the future
+        const date = new Date();
+        date.setMinutes(date.getMinutes() + 10);
+
+        firebase.notifications().scheduleNotification(notification, {
+          exact: true,
+          fireDate: date.getTime(),
+          repeatInterval: 'day',
+        })
+
 
         goals.push(goal);
       });
