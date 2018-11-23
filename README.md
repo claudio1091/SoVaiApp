@@ -4,17 +4,15 @@
 
 ![Version][version]
 
-<a href='https://play.google.com/store/apps/details?id=com.claudio.sovai&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Disponível no Google Play' width='250' src='https://play.google.com/intl/en_us/badges/images/generic/pt-br_badge_web_generic.png'/></a>
-
 App feito em React Native para acompanhamento diário de metas, tanto pessoais quanto profissionais, com schedule de notificações locais e integração com o Firebase.
 
 > **Disponível apenas para Android.**
 
 ![](./assets/icon.png)
 
-## Configuração para Desenvolvimento
+<a href='https://play.google.com/store/apps/details?id=com.claudio.sovai&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Disponível no Google Play' width='250' src='https://play.google.com/intl/en_us/badges/images/generic/pt-br_badge_web_generic.png'/></a>
 
-Descreva como instalar todas as dependências para desenvolvimento e como rodar um test-suite automatizado de algum tipo. Se necessário, faça isso para múltiplas plataformass.
+## Configuração para Desenvolvimento
 
 ```sh
 npm install
