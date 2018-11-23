@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, AsyncStorage } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { connect } from 'react-redux';
 import { robotoWeights } from 'react-native-typography';

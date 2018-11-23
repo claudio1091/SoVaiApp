@@ -22,6 +22,44 @@ class ListGoals extends Component {
 
     user = JSON.parse(user);
     getGoals(user.uid, this.onError);
+
+    this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed(notification => {
+      // Process your notification as required
+      // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+      console.log('onNotificationDisplayed ->', notification);
+    });
+
+    this.notificationListener = firebase.notifications().onNotification(notification => {
+      // Process your notification as required
+      // app no primeiro plano
+      console.log('onNotification ->', notification);
+    });
+
+    this.notificationOpenedListener = firebase.notifications().onNotificationOpened(notificationOpen => {
+      // Get the action triggered by the notification being opened
+      const action = notificationOpen.action;
+      // Get information about the notification that was opened
+      const notification = notificationOpen.notification;
+
+      console.log('onNotificationOpened ->', { action, notification });
+    });
+
+    const notificationOpen = await firebase.notifications().getInitialNotification();
+    if (notificationOpen) {
+      // App was opened by a notification
+      // Get the action triggered by the notification being opened
+      const action = notificationOpen.action;
+      // Get information about the notification that was opened
+      const notification = notificationOpen.notification;
+
+      console.log('getInitialNotification ->', { action, notification });
+    }
+  }
+
+  componentWillUnmount() {
+    this.notificationDisplayedListener();
+    this.notificationListener();
+    this.notificationOpenedListener();
   }
 
   onError(error) {
