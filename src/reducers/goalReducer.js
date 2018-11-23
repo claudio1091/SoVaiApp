@@ -42,7 +42,7 @@ const goalReducer = (state = initialState, action) => {
 
           // Schedule the notification for 10 minutes in the future
           const date = new Date();
-          date.setMinutes(date.getMinutes() + 5);
+          date.setMinutes(date.getMinutes() + 2);
 
           console.log({ notification, date });
 
