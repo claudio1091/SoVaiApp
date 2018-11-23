@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, YellowBox } from 'react-native';
+import { View, YellowBox, StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
 
 import store from './src/store';
@@ -16,6 +16,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <View style={{ flex: 1 }}>
+          <StatusBar barStyle="dark-content" backgroundColor="#F5F8FB" />
           <AppStack />
         </View>
       </Provider>
