@@ -16,7 +16,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <View style={{ flex: 1 }}>
-          <StatusBar barStyle="dark-content" backgroundColor="#F5F8FB" />
+          <StatusBar barStyle="light-content" backgroundColor="#EE6C4D" />
           <AppStack />
         </View>
       </Provider>
