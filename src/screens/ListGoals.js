@@ -33,6 +33,8 @@ class ListGoals extends Component {
       // Process your notification as required
       // app no primeiro plano
       console.log('onNotification ->', notification);
+      // Display the notification
+      firebase.notifications().displayNotification(notification);
     });
 
     this.notificationOpenedListener = firebase.notifications().onNotificationOpened(notificationOpen => {
@@ -42,6 +44,9 @@ class ListGoals extends Component {
       const notification = notificationOpen.notification;
 
       console.log('onNotificationOpened ->', { action, notification });
+      if (notification.data && notification.data.id) {
+        this.navigateDetail(notification.data);
+      }
     });
 
     const notificationOpen = await firebase.notifications().getInitialNotification();

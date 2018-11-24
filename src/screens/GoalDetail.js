@@ -55,10 +55,12 @@ class GoalDetail extends Component {
     Moment.locale('pt-br');
 
     const { navigation } = this.props;
-    const goalParam = navigation.getParam('goal', new Goal());
+    const goal = new Goal();
+
+    goal.inflate(navigation.getParam('goal', new Goal()));
 
     this.state = {
-      goal: goalParam,
+      goal,
       loading: false,
     };
   }
@@ -99,6 +101,36 @@ class GoalDetail extends Component {
     try {
       const { updateGoal } = this.props;
       const { goal } = this.state;
+
+      this.setState({ loading: true }, () => {
+        updateGoal(goal, this.onSuccess, this.onError);
+      });
+    } catch (err) {
+      console.warn(err);
+      this.setState({ loading: false });
+    }
+  };
+
+  deleteGoal = () => {
+    try {
+      const { updateGoal } = this.props;
+      const { goal } = this.state;
+      goal.delete();
+
+      this.setState({ loading: true }, () => {
+        updateGoal(goal, this.onSuccess, this.onError);
+      });
+    } catch (err) {
+      console.warn(err);
+      this.setState({ loading: false });
+    }
+  };
+
+  archiveGoal = () => {
+    try {
+      const { updateGoal } = this.props;
+      const { goal } = this.state;
+      goal.archive();
 
       this.setState({ loading: true }, () => {
         updateGoal(goal, this.onSuccess, this.onError);
@@ -203,8 +235,8 @@ class GoalDetail extends Component {
               marginBottom: 10,
             }}
           >
-            <Button text="concluir" onPress={() => this.saveGoal()} />
-            <Button text="excluir" onPress={() => this.saveGoal()} />
+            <Button text="concluir" onPress={() => this.archiveGoal()} />
+            <Button text="excluir" onPress={() => this.deleteGoal()} />
           </View>
         </ScrollView>
       </Container>

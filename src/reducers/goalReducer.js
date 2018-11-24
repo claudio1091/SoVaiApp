@@ -1,6 +1,6 @@
-import firebase from 'react-native-firebase';
 import Goal from '../model/goalModel';
 import * as actionTypes from '../actions/actionTypes'; // Import the actions types constant we defined in our actions
+import * as goalHelper from '../helpers/goalHelper';
 
 const initialState = {
   isLoading: false,
@@ -26,37 +26,16 @@ const goalReducer = (state = initialState, action) => {
         const item = childSnapshot.val();
         item.key = childSnapshot.key;
 
-        const goal = new Goal(item._userId, item._name, item._dtGoal, item._status);
+        const goal = new Goal(item.userId, item.name, item.dtGoal, item.status);
         goal.inflate(item);
 
-        if (goal.id) {
-          // make goal notification
-          const notification = new firebase.notifications.Notification()
-            .setNotificationId(goal.id)
-            .setTitle('Msg motivadora aqui')
-            .setBody(`Não esqueça do seu objetivo: ${goal.name}`)
-            .android.setChannelId('so-vai-main-channel')
-            .android.setSmallIcon('ic_launcher')
-            .android.setGroupSummary(true)
-            .android.setGroup(goal.id);
-
-          // Schedule the notification for 10 minutes in the future
-          const date = new Date();
-          date.setMinutes(date.getMinutes() + 2);
-
-          console.log({ notification, date });
-
-          firebase.notifications().scheduleNotification(notification, {
-            exact: true,
-            fireDate: date.getTime(),
-            repeatInterval: 'day',
-          });
-        }
-
-        goals.push(goal);
+        if (goal.status === 'open') goals.push(goal);
       });
 
       goals.reverse();
+
+      // make notifications
+      goalHelper.makeNotifications(goals);
 
       return { ...state, goals, isLoading: false };
     }
