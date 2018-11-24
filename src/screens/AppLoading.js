@@ -4,6 +4,8 @@ import firebase from 'react-native-firebase';
 
 import Container from '../components/Container';
 import Loader from '../components/Loader';
+import { QUOTES_LOCAL_KEY } from '../config/constants';
+import getQuotes from '../helpers/quotesHelper';
 
 class AppLoading extends Component {
   state = {
@@ -17,6 +19,8 @@ class AppLoading extends Component {
     try {
       let user = await AsyncStorage.getItem('user');
       user = await JSON.parse(user);
+
+      getQuotes(this.saveQuotesStorage);
 
       await this.notificationPermission();
 
@@ -35,6 +39,12 @@ class AppLoading extends Component {
       });
     }
   }
+
+  saveQuotesStorage = async (success, response) => {
+    if (success) {
+      await AsyncStorage.setItem(QUOTES_LOCAL_KEY, JSON.stringify(response));
+    }
+  };
 
   notificationPermission = async () => {
     const enabled = await firebase.messaging().hasPermission();
