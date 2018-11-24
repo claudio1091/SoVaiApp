@@ -12,9 +12,9 @@ import FormTextInput from '../components/FormTextInput';
 import { login } from '../actions/authActions';
 
 const Logo = styled.Image`
-  height: 150;
+  height: 120;
   margin-vertical: 30;
-  width: 150;
+  width: 120;
 `;
 
 class SingIn extends Component {
@@ -28,10 +28,10 @@ class SingIn extends Component {
     };
   }
 
-  onSingInSuccess = user => {
+  onSingInSuccess = data => {
     const { navigation } = this.props;
 
-    ToastAndroid.show(`Bem vindo ${user.username}`, ToastAndroid.SHORT);
+    ToastAndroid.show(`Bem vindo ${data.user.username}`, ToastAndroid.SHORT);
     this.setState({ loading: false }, () => {
       navigation.navigate('ListScrn');
     });

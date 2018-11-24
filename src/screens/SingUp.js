@@ -12,9 +12,9 @@ import Loader from '../components/Loader';
 import { register } from '../actions/authActions';
 
 const Logo = styled.Image`
-  height: 150;
+  height: 120;
   margin-vertical: 30;
-  width: 150;
+  width: 120;
 `;
 
 class SingUp extends Component {
