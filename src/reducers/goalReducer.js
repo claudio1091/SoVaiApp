@@ -1,9 +1,11 @@
 import Goal from '../model/goalModel';
-import * as actionTypes from '../actions/actionTypes'; //Import the actions types constant we defined in our actions
+import * as actionTypes from '../actions/actionTypes'; // Import the actions types constant we defined in our actions
+import * as goalHelper from '../helpers/goalHelper';
 
-let initialState = {
+const initialState = {
   isLoading: false,
-  goals: []
+  goals: [],
+  newGoal: {},
 };
 
 const goalReducer = (state = initialState, action) => {
@@ -16,27 +18,24 @@ const goalReducer = (state = initialState, action) => {
     }
 
     case actionTypes.GOALS_AVAILABLE: {
-      let { data } = action;
-      let goals = [];
-      console.log({ data });
+      const { data } = action;
+      const goals = [];
 
-      //convert the snapshot (json object) to array
-      data.forEach(function(childSnapshot) {
+      // convert the snapshot (json object) to array
+      data.forEach(childSnapshot => {
         const item = childSnapshot.val();
         item.key = childSnapshot.key;
 
-        const goal = new Goal(
-          item._userId,
-          item._name,
-          item._dtGoal,
-          item._status
-        );
+        const goal = new Goal(item.userId, item.name, item.dtGoal, item.status);
         goal.inflate(item);
 
-        goals.push(goal);
+        if (goal.status === 'open') goals.push(goal);
       });
 
       goals.reverse();
+
+      // make notifications
+      goalHelper.makeNotifications(goals);
 
       return { ...state, goals, isLoading: false };
     }

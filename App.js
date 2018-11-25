@@ -1,22 +1,27 @@
 import React, { Component } from 'react';
-import { View, YellowBox } from 'react-native';
+import { View, YellowBox, StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
 
 import store from './src/store';
-import { AppStack } from './src/routes';
+import AppStack from './src/routes';
 
-export default class App extends Component {
-  componentDidMount() {
-    YellowBox.ignoreWarnings(['Require cycle']);
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    YellowBox.ignoreWarnings(['Require cycle', 'Setting a timer']);
   }
 
   render() {
     return (
       <Provider store={store}>
         <View style={{ flex: 1 }}>
-          <AppStack persistenceKey={'NavigationStateDEV'} />
+          <StatusBar barStyle="light-content" backgroundColor="#EE6C4D" />
+          <AppStack />
         </View>
       </Provider>
     );
   }
 }
+
+export default App;
