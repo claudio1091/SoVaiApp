@@ -40,5 +40,5 @@ Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
 4. _Push_ (`git push origin feature/fooBar`)
 5. Crie um novo _Pull Request_
 
-[version]: https://img.shields.io/badge/version-beta-orange.svg
+[version]: https://img.shields.io/badge/version-1.0.1-orange.svg
 [npm-url]: https://npmjs.org/package/datadog-metrics
