@@ -7,7 +7,7 @@
             @mipmap/background_splash
         </item>
         <item name="android:statusBarColor">
-            @color/secondary
+            @color/background
         </item>
     </style>
 
